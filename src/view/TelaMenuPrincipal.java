@@ -5,6 +5,7 @@
  */
 package view;
 
+import controller.ControllerCadFuncionario;
 import controller.ControllerCadHospede;
 
 /**
@@ -50,15 +51,16 @@ public class TelaMenuPrincipal extends javax.swing.JFrame {
 
         jMenu2.setText("Cadastros");
 
-        jMenuItemProduto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/Bomb.png"))); // NOI18N
+        jMenuItemProduto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/Buy.png"))); // NOI18N
         jMenuItemProduto.setText("Produto");
         jMenu2.add(jMenuItemProduto);
         jMenu2.add(jSeparator1);
 
-        jMenuItem4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/Boss.png"))); // NOI18N
+        jMenuItem4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/Delivery.png"))); // NOI18N
         jMenuItem4.setText("Fornecedor");
         jMenu2.add(jMenuItem4);
 
+        jMenuItem5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/People.png"))); // NOI18N
         jMenuItem5.setText("Hóspede");
         jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -67,7 +69,13 @@ public class TelaMenuPrincipal extends javax.swing.JFrame {
         });
         jMenu2.add(jMenuItem5);
 
+        jMenuItem6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/Boss.png"))); // NOI18N
         jMenuItem6.setText("Funcionário");
+        jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem6ActionPerformed(evt);
+            }
+        });
         jMenu2.add(jMenuItem6);
         jMenu2.add(jSeparator2);
 
@@ -121,6 +129,12 @@ public class TelaMenuPrincipal extends javax.swing.JFrame {
         ControllerCadHospede controllerCadHospede = new ControllerCadHospede(telaCadastroHospede);
         telaCadastroHospede.setVisible(true);
     }//GEN-LAST:event_jMenuItem5ActionPerformed
+
+    private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
+        TelaCadastroFuncionario telaCadastroFuncionario = new TelaCadastroFuncionario(null,true);
+        ControllerCadFuncionario controllerCadFuncionario = new ControllerCadFuncionario(telaCadastroFuncionario);
+        telaCadastroFuncionario.setVisible(true);
+    }//GEN-LAST:event_jMenuItem6ActionPerformed
 
     /**
      * @param args the command line arguments
