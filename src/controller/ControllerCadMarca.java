@@ -2,6 +2,7 @@ package controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.JOptionPane;
 import model.bo.Marca;
 import service.MarcaService;
 import view.TelaBuscaMarca;
@@ -21,20 +22,26 @@ public class ControllerCadMarca implements ActionListener {
         this.telaCadMarca.getjButtonBuscar().addActionListener(this);
         this.telaCadMarca.getjButtonSair().addActionListener(this);
 
-        utilities.Utilities.ativaDesativa(this.telaCadMarca.getjPanelBotoes(), true);
+        ativaDesativa(this.telaCadMarca, true);
         utilities.Utilities.limpaComponentes(this.telaCadMarca.getjPanelDados(), false);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == this.telaCadMarca.getjButtonNovo()) {
-            utilities.Utilities.ativaDesativa(this.telaCadMarca.getjPanelBotoes(), false);
+            ativaDesativa(this.telaCadMarca, false);
             utilities.Utilities.limpaComponentes(this.telaCadMarca.getjPanelDados(), true);
             this.telaCadMarca.getjTextFieldId().setEnabled(false);
 
         } else if (e.getSource() == this.telaCadMarca.getjButtonGravar()) {
+            String descricao = this.telaCadMarca.getjTextFieldDescricao().getText();
+            
+            if(descricao.isEmpty() || descricao.isBlank()) {
+                JOptionPane.showMessageDialog(this.telaCadMarca, "A descrição é obrigatória", "Erro", JOptionPane.ERROR_MESSAGE);
+            }
+            
             Marca marca = new Marca();
-            marca.setDescricao(this.telaCadMarca.getjTextFieldDescricao().getText());
+            marca.setDescricao(descricao);
             marca.setStatus('A');
 
             if (this.telaCadMarca.getjTextFieldId().getText().equalsIgnoreCase("")) {
@@ -44,11 +51,11 @@ public class ControllerCadMarca implements ActionListener {
                 MarcaService.Atualizar(marca);
             }
             
-            utilities.Utilities.ativaDesativa(this.telaCadMarca.getjPanelBotoes(), true);
+            ativaDesativa(this.telaCadMarca, true);
             utilities.Utilities.limpaComponentes(this.telaCadMarca.getjPanelDados(), false);
 
         } else if (e.getSource() == this.telaCadMarca.getjButtonCancelar()) {
-            utilities.Utilities.ativaDesativa(this.telaCadMarca.getjPanelBotoes(), true);
+            ativaDesativa(this.telaCadMarca, true);
             utilities.Utilities.limpaComponentes(this.telaCadMarca.getjPanelDados(), false);
 
         } else if (e.getSource() == this.telaCadMarca.getjButtonBuscar()) {
@@ -62,7 +69,7 @@ public class ControllerCadMarca implements ActionListener {
                 Marca marca;
                 marca = MarcaService.Carregar(codigo);
                 
-                utilities.Utilities.ativaDesativa(this.telaCadMarca.getjPanelBotoes(), false);
+                ativaDesativa(this.telaCadMarca, false);
                 utilities.Utilities.limpaComponentes(this.telaCadMarca.getjPanelDados(), true);
 
                 this.telaCadMarca.getjTextFieldId().setText(String.valueOf(marca.getId()));
@@ -74,5 +81,13 @@ public class ControllerCadMarca implements ActionListener {
         } else if (e.getSource() == this.telaCadMarca.getjButtonSair()) {
             this.telaCadMarca.dispose();
         }
+    }
+
+    private void ativaDesativa(TelaCadastroMarca telaCadMarca, boolean ativado) {
+        this.telaCadMarca.getjButtonNovo().setEnabled(ativado);
+        this.telaCadMarca.getjButtonGravar().setEnabled(!ativado);
+        this.telaCadMarca.getjButtonCancelar().setEnabled(!ativado);
+        this.telaCadMarca.getjButtonBuscar().setEnabled(ativado);
+        this.telaCadMarca.getjButtonSair().setEnabled(ativado);
     }
 }
