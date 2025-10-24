@@ -11,6 +11,11 @@ public class HospedeService {
         hospedeDAO.Create(objeto);
     }
 
+    public static List<Hospede> Carregar() {
+        HospedeDAO hospedeDAO = new HospedeDAO();
+        return hospedeDAO.Retrieve();
+    }
+    
     public static Hospede Carregar(int id) {
 
         HospedeDAO hospedeDAO = new HospedeDAO();

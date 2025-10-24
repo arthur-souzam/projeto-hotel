@@ -16,12 +16,14 @@ public class TelaCadastroProdutoCopa extends javax.swing.JDialog {
     public JButton getjButtonGravar() { return jButtonGravar; }
     public JButton getjButtonNovo() { return jButtonNovo; }
     public JButton getjButtonSair() { return jButtonSair; }
+    public JButton getjButtonExcluir() { return jButtonExcluir; } // Getter adicionado
     public JPanel getjPanelBotoes() { return jPanelBotoes; }
     public JPanel getjPanelDados() { return jPanelDados; }
     public JTextField getjTextFieldId() { return jTextFieldId; }
     public JTextField getjTextFieldDescricao() { return jTextFieldDescricao; }
     public JTextField getjTextFieldValor() { return jTextFieldValor; }
     public JTextField getjTextFieldCodigoBarra() { return jTextFieldCodigoBarra; }
+    public JTextField getjTextFieldStatus() { return jTextFieldStatus; } // Getter adicionado
 
     @SuppressWarnings("unchecked")
     private void initComponents() {
@@ -33,6 +35,7 @@ public class TelaCadastroProdutoCopa extends javax.swing.JDialog {
         jButtonCancelar = new javax.swing.JButton();
         jButtonGravar = new javax.swing.JButton();
         jButtonBuscar = new javax.swing.JButton();
+        jButtonExcluir = new javax.swing.JButton(); // Botão adicionado
         jButtonSair = new javax.swing.JButton();
         jPanelDados = new javax.swing.JPanel();
         jLabelId = new javax.swing.JLabel();
@@ -43,6 +46,8 @@ public class TelaCadastroProdutoCopa extends javax.swing.JDialog {
         jTextFieldValor = new javax.swing.JTextField();
         jLabelCodigoBarra = new javax.swing.JLabel();
         jTextFieldCodigoBarra = new javax.swing.JTextField();
+        jLabelStatus = new javax.swing.JLabel(); // Label adicionada
+        jTextFieldStatus = new javax.swing.JTextField(); // Campo adicionado
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Cadastro de Produto da Copa");
@@ -86,6 +91,12 @@ public class TelaCadastroProdutoCopa extends javax.swing.JDialog {
         jButtonBuscar.setPreferredSize(new java.awt.Dimension(110, 35));
         jPanelBotoes.add(jButtonBuscar);
 
+        jButtonExcluir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/Delete.png"))); // Ícone adicionado
+        jButtonExcluir.setText("Excluir");
+        jButtonExcluir.setEnabled(false);
+        jButtonExcluir.setPreferredSize(new java.awt.Dimension(110, 35));
+        jPanelBotoes.add(jButtonExcluir);
+
         jButtonSair.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/Exit.png")));
         jButtonSair.setText("Sair");
         jButtonSair.setPreferredSize(new java.awt.Dimension(110, 35));
@@ -100,6 +111,8 @@ public class TelaCadastroProdutoCopa extends javax.swing.JDialog {
         jLabelDescricao.setText("Descrição");
         jLabelValor.setText("Valor (R$)");
         jLabelCodigoBarra.setText("Código de Barras");
+        jLabelStatus.setText("Status");
+        jTextFieldStatus.setEnabled(false); // Status desabilitado
 
         javax.swing.GroupLayout jPanelDadosLayout = new javax.swing.GroupLayout(jPanelDados);
         jPanelDados.setLayout(jPanelDadosLayout);
@@ -115,7 +128,11 @@ public class TelaCadastroProdutoCopa extends javax.swing.JDialog {
                         .addGap(18, 18, 18)
                         .addGroup(jPanelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabelDescricao)
-                            .addComponent(jTextFieldDescricao)))
+                            .addComponent(jTextFieldDescricao))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabelStatus)
+                            .addComponent(jTextFieldStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanelDadosLayout.createSequentialGroup()
                         .addGroup(jPanelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabelValor)
@@ -134,11 +151,13 @@ public class TelaCadastroProdutoCopa extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(jPanelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabelId)
-                    .addComponent(jLabelDescricao))
+                    .addComponent(jLabelDescricao)
+                    .addComponent(jLabelStatus))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextFieldId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextFieldDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTextFieldDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextFieldStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabelValor)
@@ -171,12 +190,14 @@ public class TelaCadastroProdutoCopa extends javax.swing.JDialog {
 
     private javax.swing.JButton jButtonBuscar;
     private javax.swing.JButton jButtonCancelar;
+    private javax.swing.JButton jButtonExcluir;
     private javax.swing.JButton jButtonGravar;
     private javax.swing.JButton jButtonNovo;
     private javax.swing.JButton jButtonSair;
     private javax.swing.JLabel jLabelCodigoBarra;
     private javax.swing.JLabel jLabelDescricao;
     private javax.swing.JLabel jLabelId;
+    private javax.swing.JLabel jLabelStatus;
     private javax.swing.JLabel jLabelTitulo;
     private javax.swing.JLabel jLabelValor;
     private javax.swing.JPanel jPanelBotoes;
@@ -185,5 +206,6 @@ public class TelaCadastroProdutoCopa extends javax.swing.JDialog {
     private javax.swing.JTextField jTextFieldCodigoBarra;
     private javax.swing.JTextField jTextFieldDescricao;
     private javax.swing.JTextField jTextFieldId;
+    private javax.swing.JTextField jTextFieldStatus;
     private javax.swing.JTextField jTextFieldValor;
 }

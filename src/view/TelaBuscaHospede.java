@@ -51,7 +51,8 @@ public class TelaBuscaHospede extends javax.swing.JDialog {
     public JComboBox<String> getjCBFiltro() {
         return jCBFiltro;
     }
-
+    
+    
     
     
     

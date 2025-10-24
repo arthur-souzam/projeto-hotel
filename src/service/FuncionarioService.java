@@ -11,6 +11,11 @@ public class FuncionarioService {
         funcionarioDAO.Create(objeto);
     }
 
+    
+    public static List<Funcionario> Carregar() {
+        FuncionarioDAO veiculoDAO = new FuncionarioDAO();
+        return veiculoDAO.Retrieve();
+    }
     public static Funcionario Carregar(int id) {
         FuncionarioDAO funcionarioDAO = new FuncionarioDAO();
         return funcionarioDAO.Retrieve(id);

@@ -27,6 +27,7 @@ public class ControllerCadFuncionario implements ActionListener {
 
         ativaDesativa(true); 
         utilities.Utilities.limpaComponentes(this.telaCadFuncionario.getjPanelDados(), false);
+        this.telaCadFuncionario.getjTextFieldStatus().setEnabled(false);
     }
 
     @Override
@@ -35,6 +36,9 @@ public class ControllerCadFuncionario implements ActionListener {
             ativaDesativa(false);
             utilities.Utilities.limpaComponentes(this.telaCadFuncionario.getjPanelDados(), true);
             this.telaCadFuncionario.getjTextFieldId().setEnabled(false);
+            this.telaCadFuncionario.getjTextFieldStatus().setText("A");
+            this.telaCadFuncionario.getjTextFieldStatus().setEnabled(false);
+            this.telaCadFuncionario.getjButtonGravar().setEnabled(true);
 
         } else if (e.getSource() == this.telaCadFuncionario.getjButtonGravar()) {
             
@@ -43,36 +47,55 @@ public class ControllerCadFuncionario implements ActionListener {
             String senha = new String(this.telaCadFuncionario.getjPasswordFieldSenha().getPassword());
 
             if (nome.isBlank()) {
-                 JOptionPane.showMessageDialog(this.telaCadFuncionario, "O nome é obrigatório!", "Erro de Validação", JOptionPane.WARNING_MESSAGE);
+                 JOptionPane.showMessageDialog(this.telaCadFuncionario, "O nome é obrigatório!");
                  this.telaCadFuncionario.getjTextFieldNome().requestFocus();
                  return;
             }
             
             String cpf = this.telaCadFuncionario.getjFormattedTextFieldCpf().getText().replaceAll("[^0-9]", "");
             if (cpf.isEmpty()) {
-                JOptionPane.showMessageDialog(this.telaCadFuncionario, "O CPF é obrigatório!", "Erro de Validação", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this.telaCadFuncionario, "O CPF é obrigatório!");
                 this.telaCadFuncionario.getjFormattedTextFieldCpf().requestFocus();
                 return;
             }
             
-            String fone1 = this.telaCadFuncionario.getjTextFieldFone1().getText().replaceAll("[^0-9]", "");
+            String fone1 = this.telaCadFuncionario.getjFormattedTextFieldFone1().getText().replaceAll("[^0-9]", ""); // Alterado
             if (fone1.isEmpty()) {
-                JOptionPane.showMessageDialog(this.telaCadFuncionario, "O Fone1 é obrigatório!", "Erro de Validação", JOptionPane.WARNING_MESSAGE);
-                this.telaCadFuncionario.getjTextFieldFone1().requestFocus();
+                JOptionPane.showMessageDialog(this.telaCadFuncionario, "O Fone1 é obrigatório!");
+                this.telaCadFuncionario.getjFormattedTextFieldFone1().requestFocus(); // Alterado
                 return;
             }
 
              if (usuario.isBlank()) {
-                 JOptionPane.showMessageDialog(this.telaCadFuncionario, "O usuário é obrigatório!", "Erro de Validação", JOptionPane.WARNING_MESSAGE);
+                 JOptionPane.showMessageDialog(this.telaCadFuncionario, "O usuário é obrigatório!");
                  this.telaCadFuncionario.getjTextFieldUsuario().requestFocus();
                  return;
             }
             
              if (senha.isBlank() && this.telaCadFuncionario.getjTextFieldId().getText().equalsIgnoreCase("")) {
-                 JOptionPane.showMessageDialog(this.telaCadFuncionario, "A senha é obrigatória no cadastro!", "Erro de Validação", JOptionPane.WARNING_MESSAGE);
+                 JOptionPane.showMessageDialog(this.telaCadFuncionario, "A senha é obrigatória no cadastro!");
                  this.telaCadFuncionario.getjPasswordFieldSenha().requestFocus();
                  return;
             }
+             
+             if (this.telaCadFuncionario.getjTextFieldRg().getText().trim().isEmpty()) {
+                 JOptionPane.showMessageDialog(this.telaCadFuncionario, "O RG é Obrigatório.");
+                 this.telaCadFuncionario.getjTextFieldRg().requestFocus();
+                 return;
+             }
+             
+             String cep = this.telaCadFuncionario.getjFormattedTextFieldCep().getText().replaceAll("[^0-9]", "");
+             if (cep.isEmpty()) {
+                 JOptionPane.showMessageDialog(this.telaCadFuncionario, "O CEP é Obrigatório.");
+                 this.telaCadFuncionario.getjFormattedTextFieldCep().requestFocus();
+                 return;
+             }
+             
+             if (this.telaCadFuncionario.getjTextFieldCidade().getText().trim().isEmpty()) {
+                 JOptionPane.showMessageDialog(this.telaCadFuncionario, "A Cidade é Obrigatória.");
+                 this.telaCadFuncionario.getjTextFieldCidade().requestFocus();
+                 return;
+             }
             
             Funcionario funcionario = new Funcionario();
             funcionario.setNome(nome);
@@ -80,9 +103,9 @@ public class ControllerCadFuncionario implements ActionListener {
             funcionario.setCpf(cpf);
             funcionario.setRg(this.telaCadFuncionario.getjTextFieldRg().getText());
             funcionario.setFone1(fone1);
-            funcionario.setFone2(this.telaCadFuncionario.getjTextFieldFone2().getText());
+            funcionario.setFone2(this.telaCadFuncionario.getjFormattedTextFieldFone2().getText().replaceAll("[^0-9]", "")); // Alterado
             funcionario.setEmail(this.telaCadFuncionario.getjTextFieldEmail().getText());
-            funcionario.setCep(this.telaCadFuncionario.getjFormattedTextFieldCep().getText().replaceAll("[^0-9]", ""));
+            funcionario.setCep(cep);
             funcionario.setLogradouro(this.telaCadFuncionario.getjTextFieldLogradouro().getText());
             funcionario.setBairro(this.telaCadFuncionario.getjTextFieldBairro().getText());
             funcionario.setCidade(this.telaCadFuncionario.getjTextFieldCidade().getText());
@@ -109,10 +132,12 @@ public class ControllerCadFuncionario implements ActionListener {
 
             ativaDesativa(true);
             utilities.Utilities.limpaComponentes(this.telaCadFuncionario.getjPanelDados(), false);
+            this.telaCadFuncionario.getjTextFieldStatus().setEnabled(false);
 
         } else if (e.getSource() == this.telaCadFuncionario.getjButtonCancelar()) {
             ativaDesativa(true);
             utilities.Utilities.limpaComponentes(this.telaCadFuncionario.getjPanelDados(), false);
+            this.telaCadFuncionario.getjTextFieldStatus().setEnabled(false);
 
         } else if (e.getSource() == this.telaCadFuncionario.getjButtonBuscar()) {
             codigo = 0;
@@ -129,8 +154,8 @@ public class ControllerCadFuncionario implements ActionListener {
                 this.telaCadFuncionario.getjTextFieldNome().setText(funcionario.getNome());
                 this.telaCadFuncionario.getjFormattedTextFieldCpf().setText(funcionario.getCpf());
                 this.telaCadFuncionario.getjTextFieldRg().setText(funcionario.getRg());
-                this.telaCadFuncionario.getjTextFieldFone1().setText(funcionario.getFone1());
-                this.telaCadFuncionario.getjTextFieldFone2().setText(funcionario.getFone2());
+                this.telaCadFuncionario.getjFormattedTextFieldFone1().setText(funcionario.getFone1()); // Alterado
+                this.telaCadFuncionario.getjFormattedTextFieldFone2().setText(funcionario.getFone2()); // Alterado
                 this.telaCadFuncionario.getjTextFieldEmail().setText(funcionario.getEmail());
                 this.telaCadFuncionario.getjFormattedTextFieldCep().setText(funcionario.getCep());
                 this.telaCadFuncionario.getjTextFieldLogradouro().setText(funcionario.getLogradouro());
@@ -140,15 +165,33 @@ public class ControllerCadFuncionario implements ActionListener {
                 this.telaCadFuncionario.getjTextFieldObs().setText(funcionario.getObs());
                 this.telaCadFuncionario.getjTextFieldUsuario().setText(funcionario.getUsuario());
                 this.telaCadFuncionario.getjPasswordFieldSenha().setText("");
+                this.telaCadFuncionario.getjTextFieldStatus().setText(String.valueOf(funcionario.getStatus()));
 
-                this.telaCadFuncionario.getjButtonExcluir().setEnabled(true);
                 this.telaCadFuncionario.getjTextFieldId().setEnabled(false);
+                this.telaCadFuncionario.getjTextFieldStatus().setEnabled(false);
+
+                if (funcionario.getStatus() == 'A') {
+                    this.telaCadFuncionario.getjButtonGravar().setEnabled(true);
+                    this.telaCadFuncionario.getjButtonExcluir().setEnabled(true);
+                } else {
+                    this.telaCadFuncionario.getjButtonGravar().setEnabled(false);
+                    this.telaCadFuncionario.getjButtonExcluir().setEnabled(false);
+                }
+            } else {
+                 ativaDesativa(true);
+                 utilities.Utilities.limpaComponentes(this.telaCadFuncionario.getjPanelDados(), false);
+                 this.telaCadFuncionario.getjTextFieldStatus().setEnabled(false);
             }
 
         } else if (e.getSource() == this.telaCadFuncionario.getjButtonExcluir()) {
             if (this.telaCadFuncionario.getjTextFieldId().getText().isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Você precisa buscar um funcionário antes de excluir.", "Atenção", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Você precisa buscar um funcionário antes de excluir.");
                 return;
+            }
+            
+            if (this.telaCadFuncionario.getjTextFieldStatus().getText().equalsIgnoreCase("I")) {
+                 JOptionPane.showMessageDialog(null, "Este registro já está inativo.");
+                 return;
             }
             
             int resposta = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja INATIVAR este funcionário?", "Confirmação", JOptionPane.YES_NO_OPTION);
@@ -163,6 +206,7 @@ public class ControllerCadFuncionario implements ActionListener {
                 
                 ativaDesativa(true);
                 utilities.Utilities.limpaComponentes(this.telaCadFuncionario.getjPanelDados(), false);
+                this.telaCadFuncionario.getjTextFieldStatus().setEnabled(false);
             }
 
         } else if (e.getSource() == this.telaCadFuncionario.getjButtonSair()) {

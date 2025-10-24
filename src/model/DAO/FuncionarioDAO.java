@@ -13,7 +13,7 @@ public class FuncionarioDAO implements InterfaceDAO<Funcionario> {
     @Override
     public void Create(Funcionario objeto) {
         String sqlInstrucao = "INSERT INTO funcionario "
-                + "(nome, fone, fone2, email, cep, logradouro, bairro, cidade, complemento, data_cadastro, cpf, rg, obs, status, login, senha) "
+                + "(nome, fone, fone2, email, cep, logradouro, bairro, cidade, complemento, data_cadastro, cpf, rg, obs, status, usuario, senha) " // Corrigido login para usuario
                 + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         Connection conexao = ConnectionFactory.getConnection();
@@ -35,7 +35,7 @@ public class FuncionarioDAO implements InterfaceDAO<Funcionario> {
             pstm.setString(12, objeto.getRg());
             pstm.setString(13, objeto.getObs());
             pstm.setString(14, String.valueOf(objeto.getStatus()));
-            pstm.setString(15, objeto.getUsuario());
+            pstm.setString(15, objeto.getUsuario()); // Corrigido getLogin para getUsuario
             pstm.setString(16, objeto.getSenha());
             pstm.execute();
         } catch (SQLException ex) {
@@ -47,7 +47,7 @@ public class FuncionarioDAO implements InterfaceDAO<Funcionario> {
 
     @Override
     public List<Funcionario> Retrieve() {
-        String sqlInstrucao = "SELECT * FROM funcionario";
+        String sqlInstrucao = "SELECT * FROM funcionario WHERE status = 'A'";
         Connection conexao = ConnectionFactory.getConnection();
         PreparedStatement pstm = null;
         ResultSet rst = null;
@@ -74,7 +74,7 @@ public class FuncionarioDAO implements InterfaceDAO<Funcionario> {
                 funcionario.setRg(rst.getString("rg"));
                 funcionario.setObs(rst.getString("obs"));
                 funcionario.setStatus(rst.getString("status").charAt(0));
-                funcionario.setUsuario(rst.getString("login"));
+                funcionario.setUsuario(rst.getString("usuario")); // Corrigido login para usuario
                 funcionario.setSenha(rst.getString("senha"));
                 lista.add(funcionario);
             }
@@ -115,7 +115,7 @@ public class FuncionarioDAO implements InterfaceDAO<Funcionario> {
                 funcionario.setRg(rst.getString("rg"));
                 funcionario.setObs(rst.getString("obs"));
                 funcionario.setStatus(rst.getString("status").charAt(0));
-                funcionario.setUsuario(rst.getString("login"));
+                funcionario.setUsuario(rst.getString("usuario")); 
                 funcionario.setSenha(rst.getString("senha"));
             }
         } catch (SQLException ex) {
@@ -128,7 +128,13 @@ public class FuncionarioDAO implements InterfaceDAO<Funcionario> {
 
     @Override
     public List<Funcionario> Retrieve(String atributo, String valor) {
-        String sqlInstrucao = "SELECT * FROM funcionario WHERE " + atributo + " LIKE ?";
+       
+        String colunaBusca = atributo;
+        if (atributo.equalsIgnoreCase("login")) {
+            colunaBusca = "usuario";
+        }
+    
+        String sqlInstrucao = "SELECT * FROM funcionario WHERE " + colunaBusca + " LIKE ? AND status = 'A'";
         Connection conexao = ConnectionFactory.getConnection();
         PreparedStatement pstm = null;
         ResultSet rst = null;
@@ -156,7 +162,7 @@ public class FuncionarioDAO implements InterfaceDAO<Funcionario> {
                 funcionario.setRg(rst.getString("rg"));
                 funcionario.setObs(rst.getString("obs"));
                 funcionario.setStatus(rst.getString("status").charAt(0));
-                funcionario.setUsuario(rst.getString("login"));
+                funcionario.setUsuario(rst.getString("usuario")); 
                 funcionario.setSenha(rst.getString("senha"));
                 lista.add(funcionario);
             }
@@ -173,7 +179,7 @@ public class FuncionarioDAO implements InterfaceDAO<Funcionario> {
         String sqlInstrucao = "UPDATE funcionario SET "
                 + "nome = ?, fone = ?, fone2 = ?, email = ?, cep = ?, "
                 + "logradouro = ?, bairro = ?, cidade = ?, complemento = ?, obs = ?, status = ?, "
-                + "login = ?, senha = ? WHERE id = ?";
+                + "usuario = ?, senha = ? WHERE id = ?"; // Corrigido login para usuario
         Connection conexao = ConnectionFactory.getConnection();
         PreparedStatement pstm = null;
 
@@ -190,10 +196,10 @@ public class FuncionarioDAO implements InterfaceDAO<Funcionario> {
             pstm.setString(9, objeto.getComplemento());
             pstm.setString(10, objeto.getObs());
             pstm.setString(11, String.valueOf(objeto.getStatus()));
-            pstm.setString(12, objeto.getUsuario());
+            pstm.setString(12, objeto.getUsuario()); // Corrigido getLogin para getUsuario
             pstm.setString(13, objeto.getSenha());
             pstm.setInt(14, objeto.getId());
-            pstm.execute();
+            pstm.executeUpdate();
         } catch (SQLException ex) {
             ex.printStackTrace();
         } finally {
@@ -206,14 +212,49 @@ public class FuncionarioDAO implements InterfaceDAO<Funcionario> {
         String sqlInstrucao = "UPDATE funcionario SET status = 'I' WHERE id = ?";
         Connection conexao = ConnectionFactory.getConnection();
         PreparedStatement pstm = null;
+        boolean originalAutoCommitState = true;
+
+        if (conexao == null) {
+            System.err.println("ERRO FATAL: Conexão NULA ao tentar deletar Funcionario ID: " + objeto.getId());
+            return;
+        }
 
         try {
+            originalAutoCommitState = conexao.getAutoCommit();
+            if (originalAutoCommitState) {
+                conexao.setAutoCommit(false);
+            }
+
             pstm = conexao.prepareStatement(sqlInstrucao);
             pstm.setInt(1, objeto.getId());
-            pstm.execute();
+
+            int rowsAffected = pstm.executeUpdate();
+
+            if (rowsAffected > 0) {
+                 conexao.commit();
+            } else {
+                 conexao.rollback();
+            }
+
         } catch (SQLException ex) {
             ex.printStackTrace();
+            try {
+                if (conexao != null) {
+                    conexao.rollback();
+                }
+            } catch (SQLException rollbackEx) {
+                rollbackEx.printStackTrace();
+            }
         } finally {
+            try {
+                if (conexao != null && !conexao.isClosed()) {
+                     if (conexao.getAutoCommit() != originalAutoCommitState) {
+                         conexao.setAutoCommit(originalAutoCommitState);
+                     }
+                }
+            } catch (SQLException autoCommitEx) {
+                autoCommitEx.printStackTrace();
+            }
             ConnectionFactory.closeConnection(conexao, pstm);
         }
     }

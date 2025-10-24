@@ -30,15 +30,14 @@ public class ControllerCadVeiculo implements ActionListener {
 
         ativaDesativa(true);
         utilities.Utilities.limpaComponentes(this.telaCadVeiculo.getjPanelDados(), false);
+        this.telaCadVeiculo.getjTextFieldStatus().setEnabled(false);
     }
 
      private void carregarModelos(){
         this.telaCadVeiculo.getjComboBoxModelo().removeAllItems();
         List<Modelo> listaModelos = ModeloService.Carregar();
         for (Modelo modelo : listaModelos) {
-            if(modelo.getStatus() == 'A'){
-               this.telaCadVeiculo.getjComboBoxModelo().addItem(modelo);
-            }
+            this.telaCadVeiculo.getjComboBoxModelo().addItem(modelo);
         }
     }
 
@@ -49,6 +48,9 @@ public class ControllerCadVeiculo implements ActionListener {
             utilities.Utilities.limpaComponentes(this.telaCadVeiculo.getjPanelDados(), true);
             this.telaCadVeiculo.getjTextFieldId().setEnabled(false);
             this.telaCadVeiculo.getjComboBoxModelo().setEnabled(true);
+            this.telaCadVeiculo.getjTextFieldStatus().setText("A");
+            this.telaCadVeiculo.getjTextFieldStatus().setEnabled(false);
+            this.telaCadVeiculo.getjButtonGravar().setEnabled(true);
 
         } else if (e.getSource() == this.telaCadVeiculo.getjButtonGravar()) {
             String placa = this.telaCadVeiculo.getjTextFieldPlaca().getText();
@@ -57,10 +59,12 @@ public class ControllerCadVeiculo implements ActionListener {
 
              if (placa.isBlank()) {
                  JOptionPane.showMessageDialog(this.telaCadVeiculo, "A placa é obrigatória!", "Erro de Validação", JOptionPane.WARNING_MESSAGE);
+                 this.telaCadVeiculo.getjTextFieldPlaca().requestFocus();
                  return;
              }
               if (cor.isBlank()) {
                  JOptionPane.showMessageDialog(this.telaCadVeiculo, "A cor é obrigatória!", "Erro de Validação", JOptionPane.WARNING_MESSAGE);
+                 this.telaCadVeiculo.getjTextFieldCor().requestFocus();
                  return;
              }
              if (modeloSelecionado == null) {
@@ -83,10 +87,12 @@ public class ControllerCadVeiculo implements ActionListener {
 
             ativaDesativa(true);
             utilities.Utilities.limpaComponentes(this.telaCadVeiculo.getjPanelDados(), false);
+            this.telaCadVeiculo.getjTextFieldStatus().setEnabled(false);
 
         } else if (e.getSource() == this.telaCadVeiculo.getjButtonCancelar()) {
             ativaDesativa(true);
             utilities.Utilities.limpaComponentes(this.telaCadVeiculo.getjPanelDados(), false);
+            this.telaCadVeiculo.getjTextFieldStatus().setEnabled(false);
 
         } else if (e.getSource() == this.telaCadVeiculo.getjButtonBuscar()) {
             codigo = 0;
@@ -96,23 +102,41 @@ public class ControllerCadVeiculo implements ActionListener {
 
             if (codigo != 0) {
                 Veiculo veiculo = VeiculoService.Carregar(codigo);
+                
                 ativaDesativa(false);
                 utilities.Utilities.limpaComponentes(this.telaCadVeiculo.getjPanelDados(), true);
 
                 this.telaCadVeiculo.getjTextFieldId().setText(String.valueOf(veiculo.getId()));
                 this.telaCadVeiculo.getjTextFieldPlaca().setText(veiculo.getPlaca());
                 this.telaCadVeiculo.getjTextFieldCor().setText(veiculo.getCor());
+                this.telaCadVeiculo.getjTextFieldStatus().setText(String.valueOf(veiculo.getStatus()));
 
                 Modelo modeloDoVeiculo = veiculo.getModelo();
                 for (int i = 0; i < this.telaCadVeiculo.getjComboBoxModelo().getItemCount(); i++) {
-                    if (this.telaCadVeiculo.getjComboBoxModelo().getItemAt(i).getId() == modeloDoVeiculo.getId()) {
+                    if (this.telaCadVeiculo.getjComboBoxModelo().getItemAt(i) != null &&
+                        this.telaCadVeiculo.getjComboBoxModelo().getItemAt(i).getId() == modeloDoVeiculo.getId()) {
                         this.telaCadVeiculo.getjComboBoxModelo().setSelectedIndex(i);
                         break;
                     }
                 }
-                this.telaCadVeiculo.getjComboBoxModelo().setEnabled(true);
-                this.telaCadVeiculo.getjButtonExcluir().setEnabled(true);
+                
                 this.telaCadVeiculo.getjTextFieldId().setEnabled(false);
+                this.telaCadVeiculo.getjTextFieldStatus().setEnabled(false);
+                this.telaCadVeiculo.getjComboBoxModelo().setEnabled(true);
+
+                if (veiculo.getStatus() == 'A') {
+                    this.telaCadVeiculo.getjButtonGravar().setEnabled(true);
+                    this.telaCadVeiculo.getjButtonExcluir().setEnabled(true);
+                } else {
+                    this.telaCadVeiculo.getjButtonGravar().setEnabled(false);
+                    this.telaCadVeiculo.getjButtonExcluir().setEnabled(false);
+                    this.telaCadVeiculo.getjComboBoxModelo().setEnabled(false);
+                }
+                
+            } else {
+                 ativaDesativa(true);
+                 utilities.Utilities.limpaComponentes(this.telaCadVeiculo.getjPanelDados(), false);
+                 this.telaCadVeiculo.getjTextFieldStatus().setEnabled(false);
             }
 
         } else if (e.getSource() == this.telaCadVeiculo.getjButtonExcluir()) {
@@ -121,18 +145,24 @@ public class ControllerCadVeiculo implements ActionListener {
                 return;
             }
             
+            if (this.telaCadVeiculo.getjTextFieldStatus().getText().equalsIgnoreCase("I")) {
+                 JOptionPane.showMessageDialog(null, "Este registro já está inativo.", "Atenção", JOptionPane.INFORMATION_MESSAGE);
+                 return;
+            }
+            
             int resposta = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja INATIVAR este veículo?", "Confirmação", JOptionPane.YES_NO_OPTION);
 
             if (resposta == JOptionPane.YES_OPTION) {
                 Veiculo veiculo = new Veiculo();
                 veiculo.setId(Integer.parseInt(this.telaCadVeiculo.getjTextFieldId().getText()));
                 
-                VeiculoService.Apagar(veiculo); 
+                VeiculoService.Apagar(veiculo);
                 
                 JOptionPane.showMessageDialog(null, "Veículo inativado com sucesso!");
                 
                 ativaDesativa(true);
                 utilities.Utilities.limpaComponentes(this.telaCadVeiculo.getjPanelDados(), false);
+                this.telaCadVeiculo.getjTextFieldStatus().setEnabled(false);
             }
 
         } else if (e.getSource() == this.telaCadVeiculo.getjButtonSair()) {
@@ -140,13 +170,15 @@ public class ControllerCadVeiculo implements ActionListener {
         }
     }
 
-    private void ativaDesativa(boolean ativado) {
-        this.telaCadVeiculo.getjButtonNovo().setEnabled(ativado);
-        this.telaCadVeiculo.getjButtonGravar().setEnabled(!ativado);
-        this.telaCadVeiculo.getjButtonCancelar().setEnabled(!ativado);
-        this.telaCadVeiculo.getjButtonBuscar().setEnabled(ativado);
-        this.telaCadVeiculo.getjButtonSair().setEnabled(ativado);
-        this.telaCadVeiculo.getjComboBoxModelo().setEnabled(!ativado);
+    private void ativaDesativa(boolean estadoInicial) {
+        this.telaCadVeiculo.getjButtonNovo().setEnabled(estadoInicial);
+        this.telaCadVeiculo.getjButtonBuscar().setEnabled(estadoInicial);
+        this.telaCadVeiculo.getjButtonSair().setEnabled(estadoInicial);
+        
+        this.telaCadVeiculo.getjButtonGravar().setEnabled(!estadoInicial);
+        this.telaCadVeiculo.getjButtonCancelar().setEnabled(!estadoInicial);
+        this.telaCadVeiculo.getjComboBoxModelo().setEnabled(!estadoInicial);
+        
         this.telaCadVeiculo.getjButtonExcluir().setEnabled(false);
     }
 }

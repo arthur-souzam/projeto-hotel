@@ -10,6 +10,11 @@ public class ProdutoCopaService {
         ProdutoCopaDAO produtoCopaDAO = new ProdutoCopaDAO();
         produtoCopaDAO.Create(objeto);
     }
+    
+    public static List<ProdutoCopa> Carregar() {
+        ProdutoCopaDAO produtoCopaDAO = new ProdutoCopaDAO();
+        return produtoCopaDAO.Retrieve();
+    }
 
     public static ProdutoCopa Carregar(int id) {
         ProdutoCopaDAO produtoCopaDAO = new ProdutoCopaDAO();

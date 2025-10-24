@@ -18,13 +18,15 @@ public class TelaCadastroVeiculo extends javax.swing.JDialog {
     public JButton getjButtonGravar() { return jButtonGravar; }
     public JButton getjButtonNovo() { return jButtonNovo; }
     public JButton getjButtonSair() { return jButtonSair; }
+    public JButton getjButtonExcluir() { return jButtonExcluir; }
     public JPanel getjPanelBotoes() { return jPanelBotoes; }
     public JPanel getjPanelDados() { return jPanelDados; }
     public JTextField getjTextFieldId() { return jTextFieldId; }
     public JTextField getjTextFieldPlaca() { return jTextFieldPlaca; }
     public JTextField getjTextFieldCor() { return jTextFieldCor; }
     public JComboBox<Modelo> getjComboBoxModelo() { return jComboBoxModelo; }
-    public JButton getjButtonExcluir() { return jButtonExcluir; }
+    public JTextField getjTextFieldStatus() { return jTextFieldStatus; }
+
     @SuppressWarnings("unchecked")
     private void initComponents() {
 
@@ -35,6 +37,7 @@ public class TelaCadastroVeiculo extends javax.swing.JDialog {
         jButtonCancelar = new javax.swing.JButton();
         jButtonGravar = new javax.swing.JButton();
         jButtonBuscar = new javax.swing.JButton();
+        jButtonExcluir = new javax.swing.JButton();
         jButtonSair = new javax.swing.JButton();
         jPanelDados = new javax.swing.JPanel();
         jLabelId = new javax.swing.JLabel();
@@ -45,6 +48,8 @@ public class TelaCadastroVeiculo extends javax.swing.JDialog {
         jTextFieldCor = new javax.swing.JTextField();
         jLabelModelo = new javax.swing.JLabel();
         jComboBoxModelo = new javax.swing.JComboBox<>();
+        jLabelStatus = new javax.swing.JLabel();
+        jTextFieldStatus = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Cadastro de Veículo");
@@ -87,20 +92,17 @@ public class TelaCadastroVeiculo extends javax.swing.JDialog {
         jButtonBuscar.setText("Buscar");
         jButtonBuscar.setPreferredSize(new java.awt.Dimension(110, 35));
         jPanelBotoes.add(jButtonBuscar);
-        
-        jButtonExcluir = new javax.swing.JButton();
-        jButtonExcluir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/Delete.png"))); // (Verifique se vc tem um ícone Delete.png)
+
+        jButtonExcluir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/Delete.png"))); // Ícone adicionado
         jButtonExcluir.setText("Excluir");
         jButtonExcluir.setEnabled(false);
         jButtonExcluir.setPreferredSize(new java.awt.Dimension(110, 35));
         jPanelBotoes.add(jButtonExcluir);
-        
+
         jButtonSair.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/Exit.png")));
         jButtonSair.setText("Sair");
         jButtonSair.setPreferredSize(new java.awt.Dimension(110, 35));
         jPanelBotoes.add(jButtonSair);
-        
-     
 
         getContentPane().add(jPanelBotoes, java.awt.BorderLayout.SOUTH);
 
@@ -111,6 +113,8 @@ public class TelaCadastroVeiculo extends javax.swing.JDialog {
         jLabelPlaca.setText("Placa");
         jLabelCor.setText("Cor");
         jLabelModelo.setText("Modelo");
+        jLabelStatus.setText("Status");
+        jTextFieldStatus.setEnabled(false);
 
         javax.swing.GroupLayout jPanelDadosLayout = new javax.swing.GroupLayout(jPanelDados);
         jPanelDados.setLayout(jPanelDadosLayout);
@@ -119,24 +123,27 @@ public class TelaCadastroVeiculo extends javax.swing.JDialog {
             .addGroup(jPanelDadosLayout.createSequentialGroup()
                 .addGap(20, 20, 20)
                 .addGroup(jPanelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jComboBoxModelo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanelDadosLayout.createSequentialGroup()
                         .addGroup(jPanelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabelId)
-                            .addComponent(jTextFieldId, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabelPlaca)
-                            .addComponent(jTextFieldPlaca, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextFieldCor)
+                            .addComponent(jLabelModelo)
                             .addGroup(jPanelDadosLayout.createSequentialGroup()
-                                .addComponent(jLabelCor)
-                                .addGap(0, 0, Short.MAX_VALUE))))
-                    .addGroup(jPanelDadosLayout.createSequentialGroup()
-                        .addComponent(jLabelModelo)
-                        .addGap(0, 626, Short.MAX_VALUE))
-                    .addComponent(jComboBoxModelo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGroup(jPanelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabelId)
+                                    .addComponent(jTextFieldId, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)
+                                .addGroup(jPanelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabelPlaca)
+                                    .addComponent(jTextFieldPlaca, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)
+                                .addGroup(jPanelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabelCor)
+                                    .addComponent(jTextFieldCor, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)
+                                .addGroup(jPanelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabelStatus)
+                                    .addComponent(jTextFieldStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addGap(20, 20, 20))
         );
         jPanelDadosLayout.setVerticalGroup(
@@ -146,12 +153,14 @@ public class TelaCadastroVeiculo extends javax.swing.JDialog {
                 .addGroup(jPanelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabelId)
                     .addComponent(jLabelPlaca)
-                    .addComponent(jLabelCor))
+                    .addComponent(jLabelCor)
+                    .addComponent(jLabelStatus))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextFieldId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jTextFieldPlaca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextFieldCor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTextFieldCor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextFieldStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabelModelo)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -180,15 +189,16 @@ public class TelaCadastroVeiculo extends javax.swing.JDialog {
 
     private javax.swing.JButton jButtonBuscar;
     private javax.swing.JButton jButtonCancelar;
+    private javax.swing.JButton jButtonExcluir;
     private javax.swing.JButton jButtonGravar;
     private javax.swing.JButton jButtonNovo;
     private javax.swing.JButton jButtonSair;
-    private javax.swing.JButton jButtonExcluir;
     private javax.swing.JComboBox<Modelo> jComboBoxModelo;
     private javax.swing.JLabel jLabelCor;
     private javax.swing.JLabel jLabelId;
     private javax.swing.JLabel jLabelModelo;
     private javax.swing.JLabel jLabelPlaca;
+    private javax.swing.JLabel jLabelStatus;
     private javax.swing.JLabel jLabelTitulo;
     private javax.swing.JPanel jPanelBotoes;
     private javax.swing.JPanel jPanelDados;
@@ -196,4 +206,5 @@ public class TelaCadastroVeiculo extends javax.swing.JDialog {
     private javax.swing.JTextField jTextFieldCor;
     private javax.swing.JTextField jTextFieldId;
     private javax.swing.JTextField jTextFieldPlaca;
+    private javax.swing.JTextField jTextFieldStatus;
 }
