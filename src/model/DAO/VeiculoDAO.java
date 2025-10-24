@@ -31,6 +31,51 @@ public class VeiculoDAO implements InterfaceDAO<Veiculo> {
             ConnectionFactory.closeConnection(conexao, pstm);
         }
     }
+    
+    @Override
+    public List<Veiculo> Retrieve() {
+        String sqlInstrucao = "SELECT v.id, v.placa, v.cor, v.status, v.modelo_id, " +
+                              "mo.descricao as modeloDescricao, ma.id as marcaId, ma.descricao as marcaDescricao " +
+                              "FROM veiculo v " +
+                              "JOIN modelo mo ON v.modelo_id = mo.id " +
+                              "JOIN marca ma ON mo.marca_id = ma.id";
+
+        Connection conexao = ConnectionFactory.getConnection();
+        PreparedStatement pstm = null;
+        ResultSet rst = null;
+        List<Veiculo> lista = new ArrayList<>(); 
+
+        try {
+            pstm = conexao.prepareStatement(sqlInstrucao);
+            rst = pstm.executeQuery();
+
+           
+            while (rst.next()) {
+                Veiculo veiculo = new Veiculo(); 
+                veiculo.setId(rst.getInt("id"));
+                veiculo.setPlaca(rst.getString("placa"));
+                veiculo.setCor(rst.getString("cor"));
+                veiculo.setStatus(rst.getString("status").charAt(0));
+
+                Marca marca = new Marca();
+                marca.setId(rst.getInt("marcaId"));
+                marca.setDescricao(rst.getString("marcaDescricao"));
+
+                Modelo modelo = new Modelo();
+                modelo.setId(rst.getInt("modelo_id"));
+                modelo.setDescricao(rst.getString("modeloDescricao"));
+                modelo.setMarca(marca);
+
+                veiculo.setModelo(modelo);
+                lista.add(veiculo); 
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            ConnectionFactory.closeConnection(conexao, pstm, rst);
+            return lista; 
+        }
+    }
 
 
     @Override

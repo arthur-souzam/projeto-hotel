@@ -27,9 +27,34 @@ public class MarcaDAO implements InterfaceDAO<Marca> {
             ConnectionFactory.closeConnection(conexao, pstm);
         }
     }
-    
-    
-    
+
+    @Override
+    public List<Marca> Retrieve() {
+        String sqlInstrucao = "SELECT id, descricao, status FROM marca";
+        Connection conexao = ConnectionFactory.getConnection();
+        PreparedStatement pstm = null;
+        ResultSet rst = null;
+        List<Marca> lista = new ArrayList<>();
+
+        try {
+            pstm = conexao.prepareStatement(sqlInstrucao);
+            rst = pstm.executeQuery();
+
+            while (rst.next()) {
+                Marca marca = new Marca();
+                marca.setId(rst.getInt("id"));
+                marca.setDescricao(rst.getString("descricao"));
+                marca.setStatus(rst.getString("status").charAt(0));
+                lista.add(marca);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            ConnectionFactory.closeConnection(conexao, pstm, rst);
+        }
+        return lista;
+    }
+
     @Override
     public Marca Retrieve(int id) {
         String sqlInstrucao = "SELECT id, descricao, status FROM marca WHERE id = ?";

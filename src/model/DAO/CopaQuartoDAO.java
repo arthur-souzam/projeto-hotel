@@ -35,6 +35,41 @@ public class CopaQuartoDAO implements InterfaceDAO<CopaQuarto> {
         }
     }
 
+    @Override
+    public List<CopaQuarto> Retrieve() {
+        String sqlInstrucao = "SELECT * FROM copa_quarto";
+        Connection conexao = ConnectionFactory.getConnection();
+        PreparedStatement pstm = null;
+        ResultSet rst = null;
+        List<CopaQuarto> lista = new ArrayList<>();
+
+        try {
+            pstm = conexao.prepareStatement(sqlInstrucao);
+            rst = pstm.executeQuery();
+
+            while (rst.next()) {
+                CopaQuarto copaQuarto = new CopaQuarto();
+                copaQuarto.setId(rst.getInt("id"));
+                copaQuarto.setQtdProduto(rst.getInt("qtd_produto"));
+                copaQuarto.setValorUnitario(rst.getFloat("valor_unitario"));
+                copaQuarto.setStatus(rst.getString("status").charAt(0));
+
+                ProdutoCopaDAO produtoDAO = new ProdutoCopaDAO();
+                copaQuarto.setProdutoCopa(produtoDAO.Retrieve(rst.getInt("produto_copa_id")));
+
+                CheckQuarto checkQuarto = new CheckQuarto();
+                checkQuarto.setId(rst.getInt("check_quarto_id"));
+                copaQuarto.setCheckQuarto(checkQuarto);
+
+                lista.add(copaQuarto);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            ConnectionFactory.closeConnection(conexao, pstm, rst);
+        }
+        return lista;
+    }
 
     @Override
     public CopaQuarto Retrieve(int id) {
@@ -82,9 +117,24 @@ public class CopaQuartoDAO implements InterfaceDAO<CopaQuarto> {
             pstm = conexao.prepareStatement(sqlInstrucao);
             pstm.setString(1, "%" + valor + "%");
             rst = pstm.executeQuery();
-            
-            // A lógica de preenchimento seria igual ao Retrieve()
-            
+
+            while (rst.next()) {
+                 CopaQuarto copaQuarto = new CopaQuarto();
+                 copaQuarto.setId(rst.getInt("id"));
+                 copaQuarto.setQtdProduto(rst.getInt("qtd_produto"));
+                 copaQuarto.setValorUnitario(rst.getFloat("valor_unitario"));
+                 copaQuarto.setStatus(rst.getString("status").charAt(0));
+
+                 ProdutoCopaDAO produtoDAO = new ProdutoCopaDAO();
+                 copaQuarto.setProdutoCopa(produtoDAO.Retrieve(rst.getInt("produto_copa_id")));
+
+                 CheckQuarto checkQuarto = new CheckQuarto();
+                 checkQuarto.setId(rst.getInt("check_quarto_id"));
+                 copaQuarto.setCheckQuarto(checkQuarto);
+
+                 lista.add(copaQuarto);
+            }
+
         } catch (SQLException ex) {
             ex.printStackTrace();
         } finally {

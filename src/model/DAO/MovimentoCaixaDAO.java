@@ -28,7 +28,13 @@ public class MovimentoCaixaDAO implements InterfaceDAO<MovimentoCaixa> {
             pstm.setString(4, String.valueOf(objeto.getFlagTipoMovimento()));
             pstm.setString(5, String.valueOf(objeto.getStatus()));
             pstm.setInt(6, objeto.getCaixa().getId());
-            pstm.setInt(7, objeto.getReceber().getId());
+
+            if (objeto.getReceber() != null) {
+                pstm.setInt(7, objeto.getReceber().getId());
+            } else {
+                pstm.setNull(7, java.sql.Types.INTEGER);
+            }
+
             pstm.execute();
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -36,6 +42,53 @@ public class MovimentoCaixaDAO implements InterfaceDAO<MovimentoCaixa> {
             ConnectionFactory.closeConnection(conexao, pstm);
         }
     }
+
+    @Override
+    public List<MovimentoCaixa> Retrieve() {
+        String sqlInstrucao = "SELECT * FROM movimento_caixa";
+        Connection conexao = ConnectionFactory.getConnection();
+        PreparedStatement pstm = null;
+        ResultSet rst = null;
+        List<MovimentoCaixa> lista = new ArrayList<>();
+
+        try {
+            pstm = conexao.prepareStatement(sqlInstrucao);
+            rst = pstm.executeQuery();
+
+            while (rst.next()) {
+                MovimentoCaixa movimento = new MovimentoCaixa();
+                movimento.setId(rst.getInt("id"));
+                movimento.setDataMovimento(rst.getTimestamp("data_movimento"));
+                movimento.setValorMovimento(rst.getFloat("valor_movimento"));
+                movimento.setObservacao(rst.getString("observacao"));
+                movimento.setFlagTipoMovimento(rst.getString("flag_tipo_movimento").charAt(0));
+                movimento.setStatus(rst.getString("status").charAt(0));
+
+                CaixaDAO caixaDAO = new CaixaDAO();
+                movimento.setCaixa(caixaDAO.Retrieve(rst.getInt("caixa_id")));
+
+                int receberId = rst.getInt("receber_id");
+                if (!rst.wasNull()) {
+                     //Quando ReceberDAO existir:
+                     //ReceberDAO receberDAO = new ReceberDAO();
+                     //movimento.setReceber(receberDAO.Retrieve(receberId));
+                     Receber receber = new Receber(); // Placeholder
+                     receber.setId(receberId);
+                     movimento.setReceber(receber); // Define o receber com ID
+                } else {
+                     movimento.setReceber(null); // Define como nulo se for nulo no banco
+                }
+
+                lista.add(movimento);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            ConnectionFactory.closeConnection(conexao, pstm, rst);
+        }
+        return lista;
+    }
+
 
     @Override
     public MovimentoCaixa Retrieve(int id) {
@@ -60,9 +113,15 @@ public class MovimentoCaixaDAO implements InterfaceDAO<MovimentoCaixa> {
 
                 CaixaDAO caixaDAO = new CaixaDAO();
                 movimento.setCaixa(caixaDAO.Retrieve(rst.getInt("caixa_id")));
-                
-                // ReceberDAO receberDAO = new ReceberDAO();
-                // movimento.setReceber(receberDAO.Retrieve(rst.getInt("receber_id")));
+
+                int receberId = rst.getInt("receber_id");
+                 if (!rst.wasNull()) {
+                     Receber receber = new Receber();
+                     receber.setId(receberId);
+                     movimento.setReceber(receber);
+                 } else {
+                      movimento.setReceber(null);
+                 }
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -93,12 +152,18 @@ public class MovimentoCaixaDAO implements InterfaceDAO<MovimentoCaixa> {
                 movimento.setObservacao(rst.getString("observacao"));
                 movimento.setFlagTipoMovimento(rst.getString("flag_tipo_movimento").charAt(0));
                 movimento.setStatus(rst.getString("status").charAt(0));
-                
+
                 CaixaDAO caixaDAO = new CaixaDAO();
                 movimento.setCaixa(caixaDAO.Retrieve(rst.getInt("caixa_id")));
 
-                // ReceberDAO receberDAO = new ReceberDAO();
-                // movimento.setReceber(receberDAO.Retrieve(rst.getInt("receber_id")));
+                int receberId = rst.getInt("receber_id");
+                if (!rst.wasNull()) {
+                    Receber receber = new Receber();
+                    receber.setId(receberId);
+                    movimento.setReceber(receber);
+                } else {
+                    movimento.setReceber(null);
+                }
 
                 lista.add(movimento);
             }
@@ -125,7 +190,13 @@ public class MovimentoCaixaDAO implements InterfaceDAO<MovimentoCaixa> {
             pstm.setString(4, String.valueOf(objeto.getFlagTipoMovimento()));
             pstm.setString(5, String.valueOf(objeto.getStatus()));
             pstm.setInt(6, objeto.getCaixa().getId());
-            pstm.setInt(7, objeto.getReceber().getId());
+
+            if (objeto.getReceber() != null) {
+                pstm.setInt(7, objeto.getReceber().getId());
+            } else {
+                pstm.setNull(7, java.sql.Types.INTEGER);
+            }
+
             pstm.setInt(8, objeto.getId());
             pstm.execute();
         } catch (SQLException ex) {

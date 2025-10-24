@@ -42,7 +42,44 @@ public class ReceberDAO implements InterfaceDAO<Receber> {
         }
     }
 
-    
+    @Override
+    public List<Receber> Retrieve() {
+        String sqlInstrucao = "SELECT * FROM receber";
+        Connection conexao = ConnectionFactory.getConnection();
+        PreparedStatement pstm = null;
+        ResultSet rst = null;
+        List<Receber> lista = new ArrayList<>();
+
+        try {
+            pstm = conexao.prepareStatement(sqlInstrucao);
+            rst = pstm.executeQuery();
+
+            while (rst.next()) {
+                Receber receber = new Receber();
+                receber.setId(rst.getInt("id"));
+                receber.setDataEmissao(rst.getTimestamp("data_emissao"));
+                receber.setDataVencimento(rst.getTimestamp("data_vencimento"));
+                receber.setValorEmitido(rst.getFloat("valor_emitido"));
+                receber.setValorAcrescimo(rst.getFloat("valor_acrescimo"));
+                receber.setValorDesconto(rst.getFloat("valor_desconto"));
+                receber.setValorPago(rst.getFloat("valor_pago"));
+                receber.setDataPagamento(rst.getTimestamp("data_pagamento"));
+                receber.setStatus(rst.getString("status").charAt(0));
+
+                Check check = new Check();
+                check.setId(rst.getInt("check_id"));
+                receber.setCheck(check);
+
+                lista.add(receber);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            ConnectionFactory.closeConnection(conexao, pstm, rst);
+        }
+        return lista;
+    }
+
     @Override
     public Receber Retrieve(int id) {
         String sqlInstrucao = "SELECT * FROM receber WHERE id = ?";
@@ -67,7 +104,9 @@ public class ReceberDAO implements InterfaceDAO<Receber> {
                 receber.setDataPagamento(rst.getTimestamp("data_pagamento"));
                 receber.setStatus(rst.getString("status").charAt(0));
 
-                // Futuramente, implementar o CheckDAO para carregar o objeto Check
+                Check check = new Check();
+                check.setId(rst.getInt("check_id"));
+                receber.setCheck(check);
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -94,7 +133,18 @@ public class ReceberDAO implements InterfaceDAO<Receber> {
                 Receber receber = new Receber();
                 receber.setId(rst.getInt("id"));
                 receber.setDataEmissao(rst.getTimestamp("data_emissao"));
-                // ... (carregar todos os outros campos)
+                receber.setDataVencimento(rst.getTimestamp("data_vencimento"));
+                receber.setValorEmitido(rst.getFloat("valor_emitido"));
+                receber.setValorAcrescimo(rst.getFloat("valor_acrescimo"));
+                receber.setValorDesconto(rst.getFloat("valor_desconto"));
+                receber.setValorPago(rst.getFloat("valor_pago"));
+                receber.setDataPagamento(rst.getTimestamp("data_pagamento"));
+                receber.setStatus(rst.getString("status").charAt(0));
+
+                Check check = new Check();
+                check.setId(rst.getInt("check_id"));
+                receber.setCheck(check);
+
                 lista.add(receber);
             }
         } catch (SQLException ex) {
@@ -138,7 +188,7 @@ public class ReceberDAO implements InterfaceDAO<Receber> {
 
     @Override
     public void Delete(Receber objeto) {
-        String sqlInstrucao = "UPDATE receber SET status = 'I' WHERE id = ?"; // 'I' de Inativo/Cancelado
+        String sqlInstrucao = "UPDATE receber SET status = 'I' WHERE id = ?";
         Connection conexao = ConnectionFactory.getConnection();
         PreparedStatement pstm = null;
 

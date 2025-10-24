@@ -29,7 +29,34 @@ public class ServicoDAO implements InterfaceDAO<Servico> {
         }
     }
 
-    
+    @Override
+    public List<Servico> Retrieve() {
+        String sqlInstrucao = "SELECT id, descricao, valor, status FROM servico";
+        Connection conexao = ConnectionFactory.getConnection();
+        PreparedStatement pstm = null;
+        ResultSet rst = null;
+        List<Servico> lista = new ArrayList<>();
+
+        try {
+            pstm = conexao.prepareStatement(sqlInstrucao);
+            rst = pstm.executeQuery();
+
+            while (rst.next()) {
+                Servico servico = new Servico();
+                servico.setId(rst.getInt("id"));
+                servico.setDescricao(rst.getString("descricao"));
+                servico.setValor(rst.getFloat("valor"));
+                servico.setStatus(rst.getString("status").charAt(0));
+                lista.add(servico);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            ConnectionFactory.closeConnection(conexao, pstm, rst);
+        }
+        return lista;
+    }
+
     @Override
     public Servico Retrieve(int id) {
         String sqlInstrucao = "SELECT id, descricao, valor, status FROM servico WHERE id = ?";

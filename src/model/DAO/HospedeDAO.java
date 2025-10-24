@@ -12,28 +12,10 @@ public class HospedeDAO implements InterfaceDAO<Hospede> {
 
     @Override
     public void Create(Hospede objeto) {
-
-        String sqlInstrucao = "Insert Into hospede("
-                + " nome, "
-                + " fone, "
-                + " fone2,"
-                + " email, "
-                + " cep, "
-                + " logradouro,"
-                + " bairro, "
-                + " cidade, "
-                + " complemento, "
-                + " data_cadastro, "
-                + " cpf, "
-                + " rg, "
-                + " obs, "
-                + " status, "
-                + " razao_social, "
-                + " cnpj, "
-                + " inscricao_estadual, "
-                + " contato ) "
+        String sqlInstrucao = "INSERT INTO hospede("
+                + " nome, fone, fone2, email, cep, logradouro, bairro, cidade, complemento, data_cadastro, "
+                + " cpf, rg, obs, status, razao_social, cnpj, inscricao_estadual, contato ) "
                 + " Values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-
         Connection conexao = model.DAO.ConnectionFactory.getConnection();
         PreparedStatement pstm = null;
 
@@ -57,9 +39,7 @@ public class HospedeDAO implements InterfaceDAO<Hospede> {
             pstm.setString(16, objeto.getCnpj());
             pstm.setString(17, objeto.getInscricaoEstdual());
             pstm.setString(18, objeto.getContato());
-
             pstm.execute();
-
         } catch (SQLException ex) {
             ex.printStackTrace();
         } finally {
@@ -68,31 +48,52 @@ public class HospedeDAO implements InterfaceDAO<Hospede> {
     }
 
     @Override
+    public List<Hospede> Retrieve() {
+        String sqlInstrucao = "SELECT * FROM hospede";
+        Connection conexao = model.DAO.ConnectionFactory.getConnection();
+        PreparedStatement pstm = null;
+        ResultSet rst = null;
+        List<Hospede> lista = new ArrayList<>();
+
+        try {
+            pstm = conexao.prepareStatement(sqlInstrucao);
+            rst = pstm.executeQuery();
+
+            while (rst.next()) {
+                Hospede hospede = new Hospede();
+                hospede.setId(rst.getInt("id"));
+                hospede.setNome(rst.getString("nome"));
+                hospede.setFone1(rst.getString("fone"));
+                hospede.setFone2(rst.getString("fone2"));
+                hospede.setEmail(rst.getString("email"));
+                hospede.setCep(rst.getString("cep"));
+                hospede.setLogradouro(rst.getString("logradouro"));
+                hospede.setBairro(rst.getString("bairro"));
+                hospede.setCidade(rst.getString("cidade"));
+                hospede.setComplemento(rst.getString("complemento"));
+                hospede.setDataCadastro(rst.getString("data_cadastro"));
+                hospede.setCpf(rst.getString("cpf"));
+                hospede.setRg(rst.getString("rg"));
+                hospede.setObs(rst.getString("obs"));
+                hospede.setRazaoSocial(rst.getString("razao_social"));
+                hospede.setCnpj(rst.getString("cnpj"));
+                hospede.setInscricaoEstdual(rst.getString("inscricao_estadual"));
+                hospede.setContato(rst.getString("contato"));
+                hospede.setStatus(rst.getString("status").charAt(0));
+                lista.add(hospede);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            ConnectionFactory.closeConnection(conexao, pstm, rst);
+        }
+        return lista;
+    }
+
+
+    @Override
     public Hospede Retrieve(int id) {
-
-        String sqlInstrucao = "Select "
-                + " id,"
-                + " nome, "
-                + " fone, "
-                + " fone2,"
-                + " email, "
-                + " cep, "
-                + " logradouro,"
-                + " bairro, "
-                + " cidade, "
-                + " complemento, "
-                + " data_cadastro, "
-                + " cpf, "
-                + " rg, "
-                + " obs, "
-                + " status, "
-                + " razao_social, "
-                + " cnpj, "
-                + " inscricao_estadual, "
-                + " contato "
-                + " From hospede"
-                + " Where id = ? ";
-
+        String sqlInstrucao = "SELECT * FROM hospede WHERE id = ?";
         Connection conexao = model.DAO.ConnectionFactory.getConnection();
         PreparedStatement pstm = null;
         ResultSet rst = null;
@@ -103,9 +104,9 @@ public class HospedeDAO implements InterfaceDAO<Hospede> {
             pstm.setInt(1, id);
             rst = pstm.executeQuery();
 
-            while (rst.next()) {
+            if (rst.next()) {
                 hospede.setId(rst.getInt("id"));
-                hospede.setNome(rst.getString(2));
+                hospede.setNome(rst.getString("nome"));
                 hospede.setFone1(rst.getString("fone"));
                 hospede.setFone2(rst.getString("fone2"));
                 hospede.setEmail(rst.getString("email"));
@@ -134,30 +135,7 @@ public class HospedeDAO implements InterfaceDAO<Hospede> {
 
     @Override
     public List<Hospede> Retrieve(String atributo, String valor) {
-
-        String sqlInstrucao = "Select "
-                + " id,"
-                + " nome, "
-                + " fone, "
-                + " fone2,"
-                + " email, "
-                + " cep, "
-                + " logradouro,"
-                + " bairro, "
-                + " cidade, "
-                + " complemento, "
-                + " data_cadastro, "
-                + " cpf, "
-                + " rg, "
-                + " obs, "
-                + " status, "
-                + " razao_social, "
-                + " cnpj, "
-                + " inscricao_estadual, "
-                + " contato "
-                + " From hospede"
-                + " Where " + atributo + " like ?";
-
+        String sqlInstrucao = "SELECT * FROM hospede WHERE " + atributo + " LIKE ?";
         Connection conexao = model.DAO.ConnectionFactory.getConnection();
         PreparedStatement pstm = null;
         ResultSet rst = null;
@@ -171,7 +149,7 @@ public class HospedeDAO implements InterfaceDAO<Hospede> {
             while (rst.next()) {
                 Hospede hospede = new Hospede();
                 hospede.setId(rst.getInt("id"));
-                hospede.setNome(rst.getString(2));
+                hospede.setNome(rst.getString("nome"));
                 hospede.setFone1(rst.getString("fone"));
                 hospede.setFone2(rst.getString("fone2"));
                 hospede.setEmail(rst.getString("email"));
@@ -201,67 +179,58 @@ public class HospedeDAO implements InterfaceDAO<Hospede> {
 
     @Override
     public void Update(Hospede objeto) {
-
-        String sqlInstrucao = "Update hospede "
-                + " Set"
-                + " nome = ?, "
-                + " fone = ?, "
-                + " fone2 = ?,"
-                + " email = ?, "
-                + " cep = ?, "
-                + " logradouro = ?,"
-                + " bairro = ?, "
-                + " cidade = ?, "
-                + " complemento = ?, "
-                + " data_cadastro = ?, "
-                + " cpf = ?, "
-                + " rg = ?, "
-                + " obs = ?, "
-                + " status = ?, "
-                + " razao_social = ?, "
-                + " cnpj = ?, "
-                + " inscricao_estadual = ?, "
-                + " contato = ? "
-                + " Where id = ? ";
+        String sqlInstrucao = "UPDATE hospede SET "
+                + " nome = ?, fone = ?, fone2 = ?, email = ?, cep = ?, logradouro = ?, bairro = ?, cidade = ?, "
+                + " complemento = ?, data_cadastro = ?, cpf = ?, rg = ?, obs = ?, status = ?, "
+                + " razao_social = ?, cnpj = ?, inscricao_estadual = ?, contato = ? "
+                + " WHERE id = ? ";
 
         Connection conexao = model.DAO.ConnectionFactory.getConnection();
         PreparedStatement pstm = null;
-        
+
         try{
-        pstm = conexao.prepareStatement(sqlInstrucao);
-        pstm.setString(1, objeto.getNome());
-        pstm.setString(2, objeto.getFone1());
-        pstm.setString(3, objeto.getFone2());
-        pstm.setString(4, objeto.getEmail());
-        pstm.setString(5, objeto.getCep());
-        pstm.setString(6, objeto.getLogradouro());
-        pstm.setString(7, objeto.getBairro());
-        pstm.setString(8, objeto.getCidade());
-        pstm.setString(9, objeto.getComplemento());
-        pstm.setString(10, objeto.getDataCadastro());
-        pstm.setString(11, objeto.getCpf());
-        pstm.setString(12, objeto.getRg());
-        pstm.setString(13, objeto.getObs());
-        pstm.setString(14, String.valueOf(objeto.getStatus()));
-        pstm.setString(15, objeto.getRazaoSocial());
-        pstm.setString(16, objeto.getCnpj());
-        pstm.setString(17, objeto.getInscricaoEstdual());
-        pstm.setString(18, objeto.getContato());
-        pstm.setInt(19, objeto.getId());
-        
-        pstm.execute();
+            pstm = conexao.prepareStatement(sqlInstrucao);
+            pstm.setString(1, objeto.getNome());
+            pstm.setString(2, objeto.getFone1());
+            pstm.setString(3, objeto.getFone2());
+            pstm.setString(4, objeto.getEmail());
+            pstm.setString(5, objeto.getCep());
+            pstm.setString(6, objeto.getLogradouro());
+            pstm.setString(7, objeto.getBairro());
+            pstm.setString(8, objeto.getCidade());
+            pstm.setString(9, objeto.getComplemento());
+            pstm.setString(10, objeto.getDataCadastro());
+            pstm.setString(11, objeto.getCpf());
+            pstm.setString(12, objeto.getRg());
+            pstm.setString(13, objeto.getObs());
+            pstm.setString(14, String.valueOf(objeto.getStatus()));
+            pstm.setString(15, objeto.getRazaoSocial());
+            pstm.setString(16, objeto.getCnpj());
+            pstm.setString(17, objeto.getInscricaoEstdual());
+            pstm.setString(18, objeto.getContato());
+            pstm.setInt(19, objeto.getId());
+            pstm.execute();
         } catch (SQLException ex){
             ex.printStackTrace();
-        }finally{
+        } finally {
             ConnectionFactory.closeConnection(conexao, pstm);
         }
     }
 
     @Override
     public void Delete(Hospede objeto) {
-        
-        
-        
-    }
+        String sqlInstrucao = "UPDATE hospede SET status = 'I' WHERE id = ?";
+        Connection conexao = ConnectionFactory.getConnection();
+        PreparedStatement pstm = null;
 
+        try {
+            pstm = conexao.prepareStatement(sqlInstrucao);
+            pstm.setInt(1, objeto.getId());
+            pstm.execute();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            ConnectionFactory.closeConnection(conexao, pstm);
+        }
+    }
 }

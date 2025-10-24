@@ -39,6 +39,47 @@ public class OrdemServicoDAO implements InterfaceDAO<OrdemServico> {
         }
     }
 
+    @Override
+    public List<OrdemServico> Retrieve() {
+        String sqlInstrucao = "SELECT * FROM oderm_servico";
+        Connection conexao = ConnectionFactory.getConnection();
+        PreparedStatement pstm = null;
+        ResultSet rst = null;
+        List<OrdemServico> lista = new ArrayList<>();
+
+        try {
+            pstm = conexao.prepareStatement(sqlInstrucao);
+            rst = pstm.executeQuery();
+
+            while (rst.next()) {
+                OrdemServico os = new OrdemServico();
+                os.setId(rst.getInt("id"));
+                os.setDataHoraCadastro(rst.getTimestamp("data_hora_cadastro"));
+                os.setDataHoraPrevistaInicio(rst.getTimestamp("data_hora_prevista_inicio"));
+                os.setDataHoraPrevistaTermino(rst.getTimestamp("data_hora_prevista_termino"));
+                os.setObs(rst.getString("obs"));
+                os.setStatus(rst.getString("status").charAt(0));
+
+                ServicoDAO servicoDAO = new ServicoDAO();
+                os.setServico(servicoDAO.Retrieve(rst.getInt("servico_id")));
+
+                Check check = new Check();
+                check.setId(rst.getInt("check_id"));
+                os.setCheck(check);
+
+                Quarto quarto = new Quarto();
+                quarto.setId(rst.getInt("quarto_id"));
+                os.setQuarto(quarto);
+
+                lista.add(os);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            ConnectionFactory.closeConnection(conexao, pstm, rst);
+            return lista;
+        }
+    }
 
     @Override
     public OrdemServico Retrieve(int id) {
@@ -63,7 +104,7 @@ public class OrdemServicoDAO implements InterfaceDAO<OrdemServico> {
 
                 ServicoDAO servicoDAO = new ServicoDAO();
                 os.setServico(servicoDAO.Retrieve(rst.getInt("servico_id")));
-                
+
                 Check check = new Check();
                 check.setId(rst.getInt("check_id"));
                 os.setCheck(check);
@@ -87,13 +128,35 @@ public class OrdemServicoDAO implements InterfaceDAO<OrdemServico> {
         PreparedStatement pstm = null;
         ResultSet rst = null;
         List<OrdemServico> lista = new ArrayList<>();
-        
-        // A lógica de preenchimento seria igual ao Retrieve()
-        
+
         try {
             pstm = conexao.prepareStatement(sqlInstrucao);
             pstm.setString(1, "%" + valor + "%");
             rst = pstm.executeQuery();
+
+            while (rst.next()) {
+                 OrdemServico os = new OrdemServico();
+                 os.setId(rst.getInt("id"));
+                 os.setDataHoraCadastro(rst.getTimestamp("data_hora_cadastro"));
+                 os.setDataHoraPrevistaInicio(rst.getTimestamp("data_hora_prevista_inicio"));
+                 os.setDataHoraPrevistaTermino(rst.getTimestamp("data_hora_prevista_termino"));
+                 os.setObs(rst.getString("obs"));
+                 os.setStatus(rst.getString("status").charAt(0));
+
+                 ServicoDAO servicoDAO = new ServicoDAO();
+                 os.setServico(servicoDAO.Retrieve(rst.getInt("servico_id")));
+
+                 Check check = new Check();
+                 check.setId(rst.getInt("check_id"));
+                 os.setCheck(check);
+
+                 Quarto quarto = new Quarto();
+                 quarto.setId(rst.getInt("quarto_id"));
+                 os.setQuarto(quarto);
+
+                 lista.add(os);
+            }
+
         } catch (SQLException ex) {
             ex.printStackTrace();
         } finally {

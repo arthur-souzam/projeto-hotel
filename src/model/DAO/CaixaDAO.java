@@ -23,7 +23,7 @@ public class CaixaDAO implements InterfaceDAO<Caixa> {
             pstm.setString(1, objeto.getDataAbertura());
             pstm.setString(2, objeto.getDataFechamento());
             pstm.setFloat(3, objeto.getValorAbertura());
-            pstm.setObject(4, objeto.getValorFechamento()); // Usar setObject para permitir nulos
+            pstm.setObject(4, objeto.getValorFechamento());
             pstm.setString(5, objeto.getObservacao());
             pstm.setString(6, String.valueOf(objeto.getStatus()));
             pstm.execute();
@@ -32,6 +32,41 @@ public class CaixaDAO implements InterfaceDAO<Caixa> {
         } finally {
             ConnectionFactory.closeConnection(conexao, pstm);
         }
+    }
+
+    @Override
+    public List<Caixa> Retrieve() {
+        String sqlInstrucao = "SELECT * FROM caixa";
+        Connection conexao = ConnectionFactory.getConnection();
+        PreparedStatement pstm = null;
+        ResultSet rst = null;
+        List<Caixa> lista = new ArrayList<>();
+
+        try {
+            pstm = conexao.prepareStatement(sqlInstrucao);
+            rst = pstm.executeQuery();
+
+            while (rst.next()) {
+                Caixa caixa = new Caixa();
+                caixa.setId(rst.getInt("id"));
+                caixa.setDataAbertura(rst.getString("data_abertura"));
+                caixa.setDataFechamento(rst.getString("data_fechamento"));
+                caixa.setValorAbertura(rst.getFloat("valor_abertura"));
+                // Tratar valor_fechamento nulo
+                float valorFechamento = rst.getFloat("valor_fechamento");
+                if (!rst.wasNull()) {
+                    caixa.setValorFechamento(valorFechamento);
+                }
+                caixa.setObservacao(rst.getString("observacao"));
+                caixa.setStatus(rst.getString("status").charAt(0));
+                lista.add(caixa);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            ConnectionFactory.closeConnection(conexao, pstm, rst);
+        }
+        return lista;
     }
 
 
@@ -53,7 +88,10 @@ public class CaixaDAO implements InterfaceDAO<Caixa> {
                 caixa.setDataAbertura(rst.getString("data_abertura"));
                 caixa.setDataFechamento(rst.getString("data_fechamento"));
                 caixa.setValorAbertura(rst.getFloat("valor_abertura"));
-                caixa.setValorFechamento(rst.getFloat("valor_fechamento"));
+                float valorFechamento = rst.getFloat("valor_fechamento");
+                if (!rst.wasNull()) {
+                    caixa.setValorFechamento(valorFechamento);
+                }
                 caixa.setObservacao(rst.getString("observacao"));
                 caixa.setStatus(rst.getString("status").charAt(0));
             }
@@ -84,7 +122,10 @@ public class CaixaDAO implements InterfaceDAO<Caixa> {
                 caixa.setDataAbertura(rst.getString("data_abertura"));
                 caixa.setDataFechamento(rst.getString("data_fechamento"));
                 caixa.setValorAbertura(rst.getFloat("valor_abertura"));
-                caixa.setValorFechamento(rst.getFloat("valor_fechamento"));
+                float valorFechamento = rst.getFloat("valor_fechamento");
+                if (!rst.wasNull()) {
+                    caixa.setValorFechamento(valorFechamento);
+                }
                 caixa.setObservacao(rst.getString("observacao"));
                 caixa.setStatus(rst.getString("status").charAt(0));
                 lista.add(caixa);
@@ -109,7 +150,12 @@ public class CaixaDAO implements InterfaceDAO<Caixa> {
             pstm.setString(1, objeto.getDataAbertura());
             pstm.setString(2, objeto.getDataFechamento());
             pstm.setFloat(3, objeto.getValorAbertura());
-            pstm.setFloat(4, objeto.getValorFechamento());
+            // Tratar valor nulo no update
+            if (objeto.getValorFechamento() != 0) { // Ou outra lógica para identificar nulo
+                 pstm.setFloat(4, objeto.getValorFechamento());
+            } else {
+                 pstm.setNull(4, java.sql.Types.FLOAT);
+            }
             pstm.setString(5, objeto.getObservacao());
             pstm.setString(6, String.valueOf(objeto.getStatus()));
             pstm.setInt(7, objeto.getId());

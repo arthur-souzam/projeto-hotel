@@ -31,11 +31,48 @@ public class ModeloDAO implements InterfaceDAO<Modelo> {
     }
 
     @Override
+    public List<Modelo> Retrieve() {
+        String sqlInstrucao = "SELECT m.id, m.descricao, m.status, m.marca_id, ma.descricao as marcaDescricao " +
+                              "FROM modelo m " +
+                              "JOIN marca ma ON m.marca_id = ma.id";
+
+        Connection conexao = ConnectionFactory.getConnection();
+        PreparedStatement pstm = null;
+        ResultSet rst = null;
+        List<Modelo> lista = new ArrayList<>();
+
+        try {
+            pstm = conexao.prepareStatement(sqlInstrucao);
+            rst = pstm.executeQuery();
+
+            while (rst.next()) {
+                Modelo modelo = new Modelo();
+                modelo.setId(rst.getInt("id"));
+                modelo.setDescricao(rst.getString("descricao"));
+                modelo.setStatus(rst.getString("status").charAt(0));
+
+                Marca marca = new Marca();
+                marca.setId(rst.getInt("marca_id")); // Corrigido para buscar marca_id
+                marca.setDescricao(rst.getString("marcaDescricao"));
+
+                modelo.setMarca(marca);
+                lista.add(modelo);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            ConnectionFactory.closeConnection(conexao, pstm, rst);
+        }
+        return lista; // Retorna a lista correta
+    }
+
+
+    @Override
     public Modelo Retrieve(int id) {
         String sqlInstrucao = "SELECT m.id, m.descricao, m.status, m.marca_id, ma.descricao as marcaDescricao " +
                               "FROM modelo m " +
                               "JOIN marca ma ON m.marca_id = ma.id WHERE m.id = ?";
-        
+
         Connection conexao = ConnectionFactory.getConnection();
         PreparedStatement pstm = null;
         ResultSet rst = null;
@@ -52,7 +89,7 @@ public class ModeloDAO implements InterfaceDAO<Modelo> {
                 modelo.setStatus(rst.getString("status").charAt(0));
 
                 Marca marca = new Marca();
-                marca.setId(rst.getInt("marca_id"));
+                marca.setId(rst.getInt("marca_id")); // Corrigido para buscar marca_id
                 marca.setDescricao(rst.getString("marcaDescricao"));
 
                 modelo.setMarca(marca);
@@ -70,7 +107,7 @@ public class ModeloDAO implements InterfaceDAO<Modelo> {
         String sqlInstrucao = "SELECT m.id, m.descricao, m.status, m.marca_id, ma.descricao as marcaDescricao " +
                               "FROM modelo m " +
                               "JOIN marca ma ON m.marca_id = ma.id WHERE m." + atributo + " LIKE ?";
-        
+
         Connection conexao = ConnectionFactory.getConnection();
         PreparedStatement pstm = null;
         ResultSet rst = null;
@@ -88,7 +125,7 @@ public class ModeloDAO implements InterfaceDAO<Modelo> {
                 modelo.setStatus(rst.getString("status").charAt(0));
 
                 Marca marca = new Marca();
-                marca.setId(rst.getInt("marca_id"));
+                marca.setId(rst.getInt("marca_id")); // Corrigido para buscar marca_id
                 marca.setDescricao(rst.getString("marcaDescricao"));
 
                 modelo.setMarca(marca);

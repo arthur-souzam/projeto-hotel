@@ -30,7 +30,35 @@ public class ProdutoCopaDAO implements InterfaceDAO<ProdutoCopa> {
         }
     }
 
-    
+    @Override
+    public List<ProdutoCopa> Retrieve() {
+        String sqlInstrucao = "SELECT id, descricao, valor, codigo_barra, status FROM produto_copa";
+        Connection conexao = ConnectionFactory.getConnection();
+        PreparedStatement pstm = null;
+        ResultSet rst = null;
+        List<ProdutoCopa> lista = new ArrayList<>();
+
+        try {
+            pstm = conexao.prepareStatement(sqlInstrucao);
+            rst = pstm.executeQuery();
+
+            while (rst.next()) {
+                ProdutoCopa produto = new ProdutoCopa();
+                produto.setId(rst.getInt("id"));
+                produto.setDescricao(rst.getString("descricao"));
+                produto.setValor(rst.getFloat("valor"));
+                produto.setCodigoBarra(rst.getString("codigo_barra"));
+                produto.setStatus(rst.getString("status").charAt(0));
+                lista.add(produto);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            ConnectionFactory.closeConnection(conexao, pstm, rst);
+        }
+        return lista;
+    }
+
     @Override
     public ProdutoCopa Retrieve(int id) {
         String sqlInstrucao = "SELECT id, descricao, valor, codigo_barra, status FROM produto_copa WHERE id = ?";
