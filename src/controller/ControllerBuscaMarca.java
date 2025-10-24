@@ -19,6 +19,23 @@ public class ControllerBuscaMarca implements ActionListener {
         this.telaBuscaMarca.getjButtonCarregar().addActionListener(this);
         this.telaBuscaMarca.getjButtonFiltar().addActionListener(this);
         this.telaBuscaMarca.getjButtonSair().addActionListener(this);
+        
+        carregarTabela();
+    }
+
+    private void carregarTabela() {
+        DefaultTableModel tabela = (DefaultTableModel) this.telaBuscaMarca.getjTableDados().getModel();
+        tabela.setRowCount(0);
+
+        List<Marca> listaMarcas = MarcaService.Carregar();
+
+        for (Marca marcaAtual : listaMarcas) {
+            tabela.addRow(new Object[]{
+                marcaAtual.getId(),
+                marcaAtual.getDescricao(),
+                marcaAtual.getStatus()
+            });
+        }
     }
 
     @Override
@@ -33,23 +50,37 @@ public class ControllerBuscaMarca implements ActionListener {
             }
         } else if (evento.getSource() == this.telaBuscaMarca.getjButtonFiltar()) {
             if (this.telaBuscaMarca.getjTFFiltro().getText().trim().equalsIgnoreCase("")) {
-                JOptionPane.showMessageDialog(null, "Informe o valor do filtro.");
+                carregarTabela();
             } else {
                 DefaultTableModel tabela = (DefaultTableModel) this.telaBuscaMarca.getjTableDados().getModel();
                 tabela.setRowCount(0);
 
-                if (this.telaBuscaMarca.getjCBFiltro().getSelectedIndex() == 0) { // ID
-                    Marca marca = MarcaService.Carregar(Integer.parseInt(this.telaBuscaMarca.getjTFFiltro().getText()));
-                    if (marca != null) {
-                         tabela.addRow(new Object[]{
-                            marca.getId(),
-                            marca.getDescricao(),
-                            marca.getStatus()
-                        });
+                String filtroSelecionado = this.telaBuscaMarca.getjCBFiltro().getSelectedItem().toString();
+                String valorFiltro = this.telaBuscaMarca.getjTFFiltro().getText();
+
+                if (filtroSelecionado.equalsIgnoreCase("ID")) {
+                     try {
+                        Marca marca = MarcaService.Carregar(Integer.parseInt(valorFiltro));
+                        if (marca != null && marca.getStatus() == 'A') { // Only show active even if searching by ID
+                             tabela.addRow(new Object[]{
+                                marca.getId(),
+                                marca.getDescricao(),
+                                marca.getStatus()
+                            });
+                        }
+                    } catch (NumberFormatException e) {
+                        JOptionPane.showMessageDialog(null, "O filtro de ID deve ser um número.", "Erro de Formato", JOptionPane.WARNING_MESSAGE);
                     }
-                } else { // Descrição
-                    String filtro = this.telaBuscaMarca.getjCBFiltro().getSelectedItem().toString().toLowerCase();
-                    List<Marca> listaMarcas = MarcaService.Carregar(filtro, this.telaBuscaMarca.getjTFFiltro().getText());
+                } else { 
+                    String colunaNoBanco;
+                     if (filtroSelecionado.equalsIgnoreCase("Descrição")) {
+                        colunaNoBanco = "descricao";
+                    } else {
+                         JOptionPane.showMessageDialog(null, "Filtro desconhecido: " + filtroSelecionado);
+                         return;
+                     }
+                    
+                    List<Marca> listaMarcas = MarcaService.Carregar(colunaNoBanco, valorFiltro);
 
                     for (Marca marcaAtual : listaMarcas) {
                         tabela.addRow(new Object[]{

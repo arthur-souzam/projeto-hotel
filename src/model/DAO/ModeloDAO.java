@@ -52,7 +52,7 @@ public class ModeloDAO implements InterfaceDAO<Modelo> {
                 modelo.setStatus(rst.getString("status").charAt(0));
 
                 Marca marca = new Marca();
-                marca.setId(rst.getInt("marca_id")); // Corrigido para buscar marca_id
+                marca.setId(rst.getInt("marca_id")); 
                 marca.setDescricao(rst.getString("marcaDescricao"));
 
                 modelo.setMarca(marca);
@@ -63,7 +63,7 @@ public class ModeloDAO implements InterfaceDAO<Modelo> {
         } finally {
             ConnectionFactory.closeConnection(conexao, pstm, rst);
         }
-        return lista; // Retorna a lista correta
+        return lista; 
     }
 
 

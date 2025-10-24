@@ -10,7 +10,11 @@ public class MarcaService {
         MarcaDAO marcaDAO = new MarcaDAO();
         marcaDAO.Create(objeto);
     }
-
+    public static List<Marca> Carregar() {
+        MarcaDAO marcaDAO = new MarcaDAO();
+        return marcaDAO.Retrieve();
+    }
+     
     public static Marca Carregar(int id) {
         MarcaDAO marcaDAO = new MarcaDAO();
         return marcaDAO.Retrieve(id);

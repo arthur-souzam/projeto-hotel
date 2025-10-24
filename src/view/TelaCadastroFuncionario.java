@@ -32,6 +32,10 @@ public class TelaCadastroFuncionario extends javax.swing.JDialog {
     public JButton getjButtonSair() {
         return jButtonSair;
     }
+    
+    public JButton getjButtonExcluir() {
+        return jButtonExcluir;
+    }
 
     public JPanel getjPanelBotoes() {
         return jPanelBotoes;
@@ -111,6 +115,7 @@ public class TelaCadastroFuncionario extends javax.swing.JDialog {
         jButtonCancelar = new javax.swing.JButton();
         jButtonGravar = new javax.swing.JButton();
         jButtonBuscar = new javax.swing.JButton();
+        jButtonExcluir = new javax.swing.JButton();
         jButtonSair = new javax.swing.JButton();
         jPanelDados = new javax.swing.JPanel();
         jLabelId = new javax.swing.JLabel();
@@ -194,6 +199,12 @@ public class TelaCadastroFuncionario extends javax.swing.JDialog {
         jButtonBuscar.setText("Buscar");
         jButtonBuscar.setPreferredSize(new java.awt.Dimension(110, 35));
         jPanelBotoes.add(jButtonBuscar);
+        
+        jButtonExcluir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/Delete.png")));
+        jButtonExcluir.setText("Excluir");
+        jButtonExcluir.setEnabled(false);
+        jButtonExcluir.setPreferredSize(new java.awt.Dimension(110, 35));
+        jPanelBotoes.add(jButtonExcluir);
 
         jButtonSair.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/Exit.png")));
         jButtonSair.setText("Sair");
@@ -406,6 +417,7 @@ public class TelaCadastroFuncionario extends javax.swing.JDialog {
                    
     private javax.swing.JButton jButtonBuscar;
     private javax.swing.JButton jButtonCancelar;
+    private javax.swing.JButton jButtonExcluir;
     private javax.swing.JButton jButtonGravar;
     private javax.swing.JButton jButtonNovo;
     private javax.swing.JButton jButtonSair;

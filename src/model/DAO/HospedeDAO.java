@@ -37,7 +37,7 @@ public class HospedeDAO implements InterfaceDAO<Hospede> {
             pstm.setString(14, String.valueOf(objeto.getStatus()));
             pstm.setString(15, objeto.getRazaoSocial());
             pstm.setString(16, objeto.getCnpj());
-            pstm.setString(17, objeto.getInscricaoEstdual());
+            pstm.setString(17, objeto.getInscricaoEstadual());
             pstm.setString(18, objeto.getContato());
             pstm.execute();
         } catch (SQLException ex) {
@@ -77,7 +77,7 @@ public class HospedeDAO implements InterfaceDAO<Hospede> {
                 hospede.setObs(rst.getString("obs"));
                 hospede.setRazaoSocial(rst.getString("razao_social"));
                 hospede.setCnpj(rst.getString("cnpj"));
-                hospede.setInscricaoEstdual(rst.getString("inscricao_estadual"));
+                hospede.setInscricaoEstadual(rst.getString("inscricao_estadual"));
                 hospede.setContato(rst.getString("contato"));
                 hospede.setStatus(rst.getString("status").charAt(0));
                 lista.add(hospede);
@@ -121,7 +121,7 @@ public class HospedeDAO implements InterfaceDAO<Hospede> {
                 hospede.setObs(rst.getString("obs"));
                 hospede.setRazaoSocial(rst.getString("razao_social"));
                 hospede.setCnpj(rst.getString("cnpj"));
-                hospede.setInscricaoEstdual(rst.getString("inscricao_estadual"));
+                hospede.setInscricaoEstadual(rst.getString("inscricao_estadual"));
                 hospede.setContato(rst.getString("contato"));
                 hospede.setStatus(rst.getString("status").charAt(0));
             }
@@ -164,7 +164,7 @@ public class HospedeDAO implements InterfaceDAO<Hospede> {
                 hospede.setObs(rst.getString("obs"));
                 hospede.setRazaoSocial(rst.getString("razao_social"));
                 hospede.setCnpj(rst.getString("cnpj"));
-                hospede.setInscricaoEstdual(rst.getString("inscricao_estadual"));
+                hospede.setInscricaoEstadual(rst.getString("inscricao_estadual"));
                 hospede.setContato(rst.getString("contato"));
                 hospede.setStatus(rst.getString("status").charAt(0));
                 listaHospedes.add(hospede);
@@ -206,7 +206,7 @@ public class HospedeDAO implements InterfaceDAO<Hospede> {
             pstm.setString(14, String.valueOf(objeto.getStatus()));
             pstm.setString(15, objeto.getRazaoSocial());
             pstm.setString(16, objeto.getCnpj());
-            pstm.setString(17, objeto.getInscricaoEstdual());
+            pstm.setString(17, objeto.getInscricaoEstadual());
             pstm.setString(18, objeto.getContato());
             pstm.setInt(19, objeto.getId());
             pstm.execute();

@@ -10,7 +10,13 @@ public class ModeloService {
         ModeloDAO modeloDAO = new ModeloDAO();
         modeloDAO.Create(objeto);
     }
-
+    
+    
+    public static List<Modelo> Carregar() {
+        ModeloDAO modeloDAO = new ModeloDAO();
+        return modeloDAO.Retrieve();
+    }
+    
     public static Modelo Carregar(int id) {
         ModeloDAO modeloDAO = new ModeloDAO();
         return modeloDAO.Retrieve(id);

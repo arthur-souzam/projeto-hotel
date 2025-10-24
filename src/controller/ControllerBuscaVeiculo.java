@@ -22,24 +22,40 @@ public class ControllerBuscaVeiculo implements ActionListener {
     }
 
     @Override
-    public void actionPerformed(ActionEvent evento) {
-        if (evento.getSource() == this.telaBuscaVeiculo.getjButtonCarregar()) {
-            if (this.telaBuscaVeiculo.getjTableDados().getRowCount() == 0) {
-                JOptionPane.showMessageDialog(null, "Não Existem Dados Selecionados para Carregar!");
-            } else {
-                ControllerCadVeiculo.codigo = (int) this.telaBuscaVeiculo.getjTableDados()
-                        .getValueAt(this.telaBuscaVeiculo.getjTableDados().getSelectedRow(), 0);
-                this.telaBuscaVeiculo.dispose();
-            }
-        } else if (evento.getSource() == this.telaBuscaVeiculo.getjButtonFiltar()) {
-            if (this.telaBuscaVeiculo.getjTFFiltro().getText().trim().equalsIgnoreCase("")) {
-                JOptionPane.showMessageDialog(null, "Informe o valor do filtro.");
-            } else {
-                DefaultTableModel tabela = (DefaultTableModel) this.telaBuscaVeiculo.getjTableDados().getModel();
-                tabela.setRowCount(0);
+public void actionPerformed(ActionEvent evento) {
+    if (evento.getSource() == this.telaBuscaVeiculo.getjButtonCarregar()) {
+        if (this.telaBuscaVeiculo.getjTableDados().getRowCount() == 0) {
+            JOptionPane.showMessageDialog(null, "Não Existem Dados Selecionados para Carregar!");
+        } else {
+            ControllerCadVeiculo.codigo = (int) this.telaBuscaVeiculo.getjTableDados()
+                    .getValueAt(this.telaBuscaVeiculo.getjTableDados().getSelectedRow(), 0);
+            this.telaBuscaVeiculo.dispose();
+        }
+    } else if (evento.getSource() == this.telaBuscaVeiculo.getjButtonFiltar()) {
+        if (this.telaBuscaVeiculo.getjTFFiltro().getText().trim().equalsIgnoreCase("")) {
+            JOptionPane.showMessageDialog(null, "Informe o valor do filtro.");
+            return; // Adicionado para parar a execução aqui
+        }
 
-                if (this.telaBuscaVeiculo.getjCBFiltro().getSelectedIndex() == 0) { // ID
-                    Veiculo veiculo = VeiculoService.Carregar(Integer.parseInt(this.telaBuscaVeiculo.getjTFFiltro().getText()));
+        DefaultTableModel tabela = (DefaultTableModel) this.telaBuscaVeiculo.getjTableDados().getModel();
+        tabela.setRowCount(0);
+
+        String filtroSelecionado = this.telaBuscaVeiculo.getjCBFiltro().getSelectedItem().toString();
+        String valorFiltro = this.telaBuscaVeiculo.getjTFFiltro().getText();
+        String colunaNoBanco;
+
+        
+        switch (filtroSelecionado) {
+            case "Placa":
+                colunaNoBanco = "placa";
+                break;
+            case "Cor":
+                colunaNoBanco = "cor";
+                break;
+            case "ID":
+              
+                try {
+                    Veiculo veiculo = VeiculoService.Carregar(Integer.parseInt(valorFiltro));
                     if (veiculo != null && veiculo.getId() != 0) {
                          tabela.addRow(new Object[]{
                             veiculo.getId(),
@@ -49,23 +65,34 @@ public class ControllerBuscaVeiculo implements ActionListener {
                             veiculo.getStatus()
                         });
                     }
-                } else { // Placa, Cor
-                    String filtro = this.telaBuscaVeiculo.getjCBFiltro().getSelectedItem().toString().toLowerCase();
-                    List<Veiculo> listaVeiculos = VeiculoService.Carregar(filtro, this.telaBuscaVeiculo.getjTFFiltro().getText());
-
-                    for (Veiculo veiculoAtual : listaVeiculos) {
-                        tabela.addRow(new Object[]{
-                            veiculoAtual.getId(),
-                            veiculoAtual.getPlaca(),
-                            veiculoAtual.getCor(),
-                            veiculoAtual.getModelo().getDescricao(),
-                            veiculoAtual.getStatus()
-                        });
-                    }
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(null, "O filtro de ID deve ser um número.", "Erro de Formato", JOptionPane.WARNING_MESSAGE);
                 }
-            }
-        } else if (evento.getSource() == this.telaBuscaVeiculo.getjButtonSair()) {
-            this.telaBuscaVeiculo.dispose();
+                return; 
+
+            default:
+               
+                JOptionPane.showMessageDialog(null, "Opção de filtro desconhecida: " + filtroSelecionado);
+                return;
         }
+
+    
+        List<Veiculo> listaVeiculos = VeiculoService.Carregar(colunaNoBanco, valorFiltro);
+
+        for (Veiculo veiculoAtual : listaVeiculos) {
+            tabela.addRow(new Object[]{
+                veiculoAtual.getId(),
+                veiculoAtual.getPlaca(),
+                veiculoAtual.getCor(),
+                veiculoAtual.getModelo().getDescricao(),
+                veiculoAtual.getStatus()
+            });
+        }
+        
+
+    } else if (evento.getSource() == this.telaBuscaVeiculo.getjButtonSair()) {
+        this.telaBuscaVeiculo.dispose();
+    }
+
     }
 }

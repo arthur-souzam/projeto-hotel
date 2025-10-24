@@ -24,7 +24,7 @@ public class TelaCadastroVeiculo extends javax.swing.JDialog {
     public JTextField getjTextFieldPlaca() { return jTextFieldPlaca; }
     public JTextField getjTextFieldCor() { return jTextFieldCor; }
     public JComboBox<Modelo> getjComboBoxModelo() { return jComboBoxModelo; }
-
+    public JButton getjButtonExcluir() { return jButtonExcluir; }
     @SuppressWarnings("unchecked")
     private void initComponents() {
 
@@ -87,11 +87,20 @@ public class TelaCadastroVeiculo extends javax.swing.JDialog {
         jButtonBuscar.setText("Buscar");
         jButtonBuscar.setPreferredSize(new java.awt.Dimension(110, 35));
         jPanelBotoes.add(jButtonBuscar);
-
+        
+        jButtonExcluir = new javax.swing.JButton();
+        jButtonExcluir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/Delete.png"))); // (Verifique se vc tem um ícone Delete.png)
+        jButtonExcluir.setText("Excluir");
+        jButtonExcluir.setEnabled(false);
+        jButtonExcluir.setPreferredSize(new java.awt.Dimension(110, 35));
+        jPanelBotoes.add(jButtonExcluir);
+        
         jButtonSair.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/Exit.png")));
         jButtonSair.setText("Sair");
         jButtonSair.setPreferredSize(new java.awt.Dimension(110, 35));
         jPanelBotoes.add(jButtonSair);
+        
+     
 
         getContentPane().add(jPanelBotoes, java.awt.BorderLayout.SOUTH);
 
@@ -174,6 +183,7 @@ public class TelaCadastroVeiculo extends javax.swing.JDialog {
     private javax.swing.JButton jButtonGravar;
     private javax.swing.JButton jButtonNovo;
     private javax.swing.JButton jButtonSair;
+    private javax.swing.JButton jButtonExcluir;
     private javax.swing.JComboBox<Modelo> jComboBoxModelo;
     private javax.swing.JLabel jLabelCor;
     private javax.swing.JLabel jLabelId;

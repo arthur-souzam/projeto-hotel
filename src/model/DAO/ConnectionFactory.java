@@ -17,9 +17,10 @@ public class ConnectionFactory {
 
         try {
             return DriverManager.getConnection(banco + "?verifyServerCertificate=false"
-                    + "&useSSL=false"
-                    + "&requireSSL=false"
-                    + "&USER=" + usuario + "&password=" + senha + "&serverTimezone=UTC");
+        + "&useSSL=false"
+        + "&requireSSL=false"
+        + "&USER=" + usuario + "&password=" + senha + "&serverTimezone=UTC"
+        + "&autoCommit=true");
         } catch (SQLException ex) {
             ex.printStackTrace();
             return null;

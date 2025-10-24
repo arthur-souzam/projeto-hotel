@@ -2,7 +2,7 @@ package model.bo;
 public class Hospede extends Pessoa{
     private String razaoSocial;
     private String cnpj;
-    private String inscricaoEstdual;
+    private String inscricaoEstadual;
     private String contato;
 
     public Hospede() {
@@ -12,7 +12,7 @@ public class Hospede extends Pessoa{
         super(id, nome, fone1, fone2, email, cep, logradouro, bairro, cidade, complemento, dataCadastro, cpf, rg, obs, status);
         this.razaoSocial = razaoSocial;
         this.cnpj = cnpj;
-        this.inscricaoEstdual = inscricaoEstdual;
+        this.inscricaoEstadual = inscricaoEstdual;
         this.contato = contato;
     }
 
@@ -32,12 +32,12 @@ public class Hospede extends Pessoa{
         this.cnpj = cnpj;
     }
 
-    public String getInscricaoEstdual() {
-        return inscricaoEstdual;
+    public String getInscricaoEstadual() {
+        return inscricaoEstadual;
     }
 
-    public void setInscricaoEstdual(String inscricaoEstdual) {
-        this.inscricaoEstdual = inscricaoEstdual;
+    public void setInscricaoEstadual(String inscricaoEstdual) {
+        this.inscricaoEstadual = inscricaoEstdual;
     }
 
     public String getContato() {

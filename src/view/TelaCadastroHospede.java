@@ -48,6 +48,9 @@ public class TelaCadastroHospede extends javax.swing.JDialog {
     public JPanel getjPanelBotoes() {
         return jPanelBotoes;
     }
+    public JButton getjButtonExcluir() {
+    return jButtonExcluir;
+}
 
     public JPanel getjPanelDados() {
         return jPanelDados;
@@ -263,6 +266,7 @@ public class TelaCadastroHospede extends javax.swing.JDialog {
         jButtonCancelar = new javax.swing.JButton();
         jButtonGravar = new javax.swing.JButton();
         jButtonBuscar = new javax.swing.JButton();
+        jButtonExcluir = new javax.swing.JButton();
         jButtonSair = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -362,8 +366,12 @@ public class TelaCadastroHospede extends javax.swing.JDialog {
 
         jLabelSexo.setText("Sexo");
 
-        jComboBoxSexo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        jComboBoxSexo.setSelectedIndex(-1);
+        jComboBoxSexo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Masculino", "Feminino", "Outro" }));
+        jComboBoxSexo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBoxSexoActionPerformed(evt);
+            }
+        });
 
         jLabelContato.setText("Contato");
 
@@ -581,6 +589,17 @@ public class TelaCadastroHospede extends javax.swing.JDialog {
         jButtonBuscar.setActionCommand("0");
         jPanelBotoes.add(jButtonBuscar);
 
+        jButtonExcluir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/Erase.png"))); // NOI18N
+        jButtonExcluir.setText("Excluir");
+        jButtonExcluir.setActionCommand("0");
+        jButtonExcluir.setEnabled(false);
+        jButtonExcluir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonExcluirActionPerformed(evt);
+            }
+        });
+        jPanelBotoes.add(jButtonExcluir);
+
         jButtonSair.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/Exit.png"))); // NOI18N
         jButtonSair.setText("Sair");
         jButtonSair.setActionCommand("0");
@@ -613,6 +632,14 @@ public class TelaCadastroHospede extends javax.swing.JDialog {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButtonExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonExcluirActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButtonExcluirActionPerformed
+
+    private void jComboBoxSexoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxSexoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBoxSexoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -659,6 +686,7 @@ public class TelaCadastroHospede extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonBuscar;
     private javax.swing.JButton jButtonCancelar;
+    private javax.swing.JButton jButtonExcluir;
     private javax.swing.JButton jButtonGravar;
     private javax.swing.JButton jButtonNovo;
     private javax.swing.JButton jButtonSair;
