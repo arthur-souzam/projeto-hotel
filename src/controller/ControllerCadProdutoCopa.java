@@ -2,9 +2,9 @@ package controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.NumberFormat; // Importar
-import java.text.ParseException; // Importar
-import java.util.Locale; // Importar
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.util.Locale;
 import javax.swing.JOptionPane;
 import model.bo.ProdutoCopa;
 import service.ProdutoCopaService;
@@ -15,7 +15,7 @@ public class ControllerCadProdutoCopa implements ActionListener {
 
     TelaCadastroProdutoCopa telaCadProdutoCopa;
     public static int codigo;
-    private final NumberFormat currencyFormat; // Formatador de moeda
+    private final NumberFormat currencyFormat; 
 
     public ControllerCadProdutoCopa(TelaCadastroProdutoCopa telaCadProdutoCopa) {
         this.telaCadProdutoCopa = telaCadProdutoCopa;
@@ -27,7 +27,6 @@ public class ControllerCadProdutoCopa implements ActionListener {
         this.telaCadProdutoCopa.getjButtonSair().addActionListener(this);
         this.telaCadProdutoCopa.getjButtonExcluir().addActionListener(this);
 
-        // Configura o formatador para Real Brasileiro (R$)
         this.currencyFormat = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
 
         ativaDesativa(true);
@@ -44,10 +43,11 @@ public class ControllerCadProdutoCopa implements ActionListener {
             this.telaCadProdutoCopa.getjTextFieldStatus().setText("A");
             this.telaCadProdutoCopa.getjTextFieldStatus().setEnabled(false);
             this.telaCadProdutoCopa.getjButtonGravar().setEnabled(true);
+            this.telaCadProdutoCopa.getjTextFieldValor().setText("0,00"); 
 
         } else if (e.getSource() == this.telaCadProdutoCopa.getjButtonGravar()) {
             String descricao = this.telaCadProdutoCopa.getjTextFieldDescricao().getText();
-            String valorStr = this.telaCadProdutoCopa.getjTextFieldValor().getText();
+            String valorStr = this.telaCadProdutoCopa.getjTextFieldValor().getText(); 
             String codBarra = this.telaCadProdutoCopa.getjTextFieldCodigoBarra().getText();
             float valor = 0;
 
@@ -62,10 +62,9 @@ public class ControllerCadProdutoCopa implements ActionListener {
                 return;
             }
              
-             // Tratamento robusto para valor monetário
              try {
-                 // Remove R$, espaços e substitui vírgula por ponto
-                 String valorLimpo = valorStr.replace("R$", "").trim().replace(".", "").replace(",", ".");
+                 // Limpa R$, ponto de milhar, espaço e troca vírgula por ponto
+                 String valorLimpo = valorStr.replace("R$", "").trim().replace(".", "").replace(",", "."); 
                  valor = Float.parseFloat(valorLimpo);
                  
                  if (valor <= 0) {
@@ -74,7 +73,7 @@ public class ControllerCadProdutoCopa implements ActionListener {
                      return;
                  }
              } catch (NumberFormatException ex) {
-                 JOptionPane.showMessageDialog(this.telaCadProdutoCopa, "Valor inválido! Digite apenas números (ex: 10,50 ou R$ 10,50).");
+                 JOptionPane.showMessageDialog(this.telaCadProdutoCopa, "Valor inválido! Digite apenas números (ex: 10,50).");
                  this.telaCadProdutoCopa.getjTextFieldValor().requestFocus();
                  return;
              }
@@ -120,8 +119,8 @@ public class ControllerCadProdutoCopa implements ActionListener {
 
                 this.telaCadProdutoCopa.getjTextFieldId().setText(String.valueOf(produto.getId()));
                 this.telaCadProdutoCopa.getjTextFieldDescricao().setText(produto.getDescricao());
-                // Formata o valor como moeda R$ para exibição
-                this.telaCadProdutoCopa.getjTextFieldValor().setText(currencyFormat.format(produto.getValor())); 
+                // Formata o valor com vírgula para exibição
+                this.telaCadProdutoCopa.getjTextFieldValor().setText(String.format(Locale.GERMANY, "%.2f", produto.getValor())); 
                 this.telaCadProdutoCopa.getjTextFieldCodigoBarra().setText(produto.getCodigoBarra());
                 this.telaCadProdutoCopa.getjTextFieldStatus().setText(String.valueOf(produto.getStatus()));
 

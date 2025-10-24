@@ -34,7 +34,7 @@ public class ControllerBuscaProdutoCopa implements ActionListener {
             tabela.addRow(new Object[]{
                 produtoAtual.getId(),
                 produtoAtual.getDescricao(),
-                String.format("%.2f", produtoAtual.getValor()), // Formata valor para exibição
+                String.format("%.2f", produtoAtual.getValor()), 
                 produtoAtual.getCodigoBarra(),
                 produtoAtual.getStatus()
             });
@@ -71,11 +71,10 @@ public class ControllerBuscaProdutoCopa implements ActionListener {
                  case "ID":
                      try {
                         ProdutoCopa produto = ProdutoCopaService.Carregar(Integer.parseInt(valorFiltro));
-                        if (produto != null && produto.getId() != 0 && produto.getStatus() == 'A') {
+                        if (produto != null && produto.getId() != 0) {
                            listaProdutos.add(produto);
-                        } else if (produto != null && produto.getStatus() == 'I'){
-                             JOptionPane.showMessageDialog(null, "Produto encontrado com ID " + valorFiltro + ", mas está inativo.");
                         } else {
+                            JOptionPane.showMessageDialog(null, "Nenhum produto encontrado com o ID " + valorFiltro + ".");
                         }
                     } catch (NumberFormatException e) {
                         JOptionPane.showMessageDialog(null, "O filtro de ID deve ser um número.", "Erro de Formato", JOptionPane.WARNING_MESSAGE);
@@ -83,11 +82,11 @@ public class ControllerBuscaProdutoCopa implements ActionListener {
                     break; 
 
                 case "Descrição":
-                    colunaNoBanco = "descricao";
+                    colunaNoBanco = "decricao";
                     listaProdutos = ProdutoCopaService.Carregar(colunaNoBanco, valorFiltro);
                     break;
                     
-                case "codigo_barra": // Usa o nome da coluna como está no ComboBox e DAO
+                case "codigo_barra": 
                     colunaNoBanco = "codigo_barra";
                     listaProdutos = ProdutoCopaService.Carregar(colunaNoBanco, valorFiltro);
                     break;
@@ -97,7 +96,7 @@ public class ControllerBuscaProdutoCopa implements ActionListener {
                      return;
             }
 
-            if (listaProdutos.isEmpty() && !filtroSelecionado.equals("ID")) {
+            if (listaProdutos.isEmpty() && !filtroSelecionado.equalsIgnoreCase("ID")) {
                  JOptionPane.showMessageDialog(null, "Nenhum produto ativo encontrado para o filtro informado.");
             } else {
                 for (ProdutoCopa produtoAtual : listaProdutos) {

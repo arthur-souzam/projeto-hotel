@@ -34,7 +34,7 @@ public class ControllerBuscaModelo implements ActionListener {
             tabela.addRow(new Object[]{
                 modeloAtual.getId(),
                 modeloAtual.getDescricao(),
-                (modeloAtual.getMarca() != null ? modeloAtual.getMarca().getDescricao() : ""), // Verifica se marca não é nula
+                (modeloAtual.getMarca() != null ? modeloAtual.getMarca().getDescricao() : ""),
                 modeloAtual.getStatus()
             });
         }
@@ -70,11 +70,10 @@ public class ControllerBuscaModelo implements ActionListener {
                  case "ID":
                      try {
                         Modelo modelo = ModeloService.Carregar(Integer.parseInt(valorFiltro));
-                        if (modelo != null && modelo.getId() != 0 && modelo.getStatus() == 'A') {
+                        if (modelo != null && modelo.getId() != 0) {
                            listaModelos.add(modelo);
-                        } else if (modelo != null && modelo.getStatus() == 'I'){
-                             JOptionPane.showMessageDialog(null, "Modelo encontrado com ID " + valorFiltro + ", mas está inativo.");
                         } else {
+                             JOptionPane.showMessageDialog(null, "Nenhum modelo encontrado com o ID " + valorFiltro + ".");
                         }
                     } catch (NumberFormatException e) {
                         JOptionPane.showMessageDialog(null, "O filtro de ID deve ser um número.", "Erro de Formato", JOptionPane.WARNING_MESSAGE);
@@ -91,7 +90,7 @@ public class ControllerBuscaModelo implements ActionListener {
                      return;
             }
 
-            if (listaModelos.isEmpty() && !filtroSelecionado.equals("ID")) {
+            if (listaModelos.isEmpty() && !filtroSelecionado.equalsIgnoreCase("ID")) {
                  JOptionPane.showMessageDialog(null, "Nenhum modelo ativo encontrado para o filtro informado.");
             } else {
                 for (Modelo modeloAtual : listaModelos) {

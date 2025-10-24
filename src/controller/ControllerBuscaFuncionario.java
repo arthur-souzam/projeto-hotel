@@ -71,11 +71,10 @@ public class ControllerBuscaFuncionario implements ActionListener {
                  case "ID":
                      try {
                         Funcionario funcionario = FuncionarioService.Carregar(Integer.parseInt(valorFiltro));
-                        if (funcionario != null && funcionario.getId() != 0 && funcionario.getStatus() == 'A') {
+                        if (funcionario != null && funcionario.getId() != 0) {
                            listaFuncionarios.add(funcionario);
-                        } else if (funcionario != null && funcionario.getStatus() == 'I'){
-                             JOptionPane.showMessageDialog(null, "Funcionário encontrado com ID " + valorFiltro + ", mas está inativo.");
                         } else {
+                           JOptionPane.showMessageDialog(null, "Nenhum funcionário encontrado com o ID " + valorFiltro + ".");
                         }
                     } catch (NumberFormatException e) {
                         JOptionPane.showMessageDialog(null, "O filtro de ID deve ser um número.", "Erro de Formato", JOptionPane.WARNING_MESSAGE);
@@ -93,7 +92,7 @@ public class ControllerBuscaFuncionario implements ActionListener {
                     break;
                     
                 case "Usuário": 
-                    colunaNoBanco = "usuario"; // Corrigido aqui
+                    colunaNoBanco = "usuario";
                     listaFuncionarios = FuncionarioService.Carregar(colunaNoBanco, valorFiltro);
                     break;
                     
@@ -102,7 +101,7 @@ public class ControllerBuscaFuncionario implements ActionListener {
                      return;
             }
 
-            if (listaFuncionarios.isEmpty() && !filtroSelecionado.equals("ID")) {
+            if (listaFuncionarios.isEmpty() && !filtroSelecionado.equalsIgnoreCase("ID")) {
                  JOptionPane.showMessageDialog(null, "Nenhum funcionário ativo encontrado para o filtro informado.");
             } else {
                 for (Funcionario funcionarioAtual : listaFuncionarios) {

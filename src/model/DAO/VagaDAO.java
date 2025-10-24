@@ -7,21 +7,22 @@ import java.sql.SQLException;
 import java.sql.SQLWarning;
 import java.util.ArrayList;
 import java.util.List;
-import model.bo.Servico;
+import model.bo.Vaga;
 
-public class ServicoDAO implements InterfaceDAO<Servico> {
+public class VagaDAO implements InterfaceDAO<Vaga> {
 
     @Override
-    public void Create(Servico objeto) {
-        String sqlInstrucao = "INSERT INTO servico (descricao, valor, status) VALUES (?, ?, ?)";
+    public void Create(Vaga objeto) {
+        String sqlInstrucao = "INSERT INTO vaga_estacionamento (descricao, obs, metragem_vaga, status) VALUES (?, ?, ?, ?)";
         Connection conexao = ConnectionFactory.getConnection();
         PreparedStatement pstm = null;
 
         try {
             pstm = conexao.prepareStatement(sqlInstrucao);
             pstm.setString(1, objeto.getDescricao());
-            pstm.setFloat(2, objeto.getValor());
-            pstm.setString(3, String.valueOf(objeto.getStatus()));
+            pstm.setString(2, objeto.getObs());
+            pstm.setFloat(3, objeto.getMetragemVaga());
+            pstm.setString(4, String.valueOf(objeto.getStatus()));
             pstm.execute();
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -31,24 +32,21 @@ public class ServicoDAO implements InterfaceDAO<Servico> {
     }
 
     @Override
-    public List<Servico> Retrieve() {
-        String sqlInstrucao = "SELECT id, descricao, valor, status FROM servico WHERE status = 'A'";
+    public List<Vaga> Retrieve() {
+        String sqlInstrucao = "SELECT id, descricao, obs, metragem_vaga, status FROM vaga_estacionamento WHERE status = 'A'";
         Connection conexao = ConnectionFactory.getConnection();
         PreparedStatement pstm = null;
         ResultSet rst = null;
-        List<Servico> lista = new ArrayList<>();
+        List<Vaga> lista = new ArrayList<>();
 
         try {
             pstm = conexao.prepareStatement(sqlInstrucao);
             rst = pstm.executeQuery();
 
             while (rst.next()) {
-                Servico servico = new Servico();
-                servico.setId(rst.getInt("id"));
-                servico.setDescricao(rst.getString("descricao"));
-                servico.setValor(rst.getFloat("valor"));
-                servico.setStatus(rst.getString("status").charAt(0));
-                lista.add(servico);
+                Vaga vaga = new Vaga();
+                fillEntityFromResultSet(rst, vaga);
+                lista.add(vaga);
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -59,12 +57,12 @@ public class ServicoDAO implements InterfaceDAO<Servico> {
     }
 
     @Override
-    public Servico Retrieve(int id) {
-        String sqlInstrucao = "SELECT id, descricao, valor, status FROM servico WHERE id = ?";
+    public Vaga Retrieve(int id) {
+        String sqlInstrucao = "SELECT id, descricao, obs, metragem_vaga, status FROM vaga_estacionamento WHERE id = ?";
         Connection conexao = ConnectionFactory.getConnection();
         PreparedStatement pstm = null;
         ResultSet rst = null;
-        Servico servico = new Servico();
+        Vaga vaga = new Vaga();
 
         try {
             pstm = conexao.prepareStatement(sqlInstrucao);
@@ -72,26 +70,28 @@ public class ServicoDAO implements InterfaceDAO<Servico> {
             rst = pstm.executeQuery();
 
             if (rst.next()) {
-                servico.setId(rst.getInt("id"));
-                servico.setDescricao(rst.getString("descricao"));
-                servico.setValor(rst.getFloat("valor"));
-                servico.setStatus(rst.getString("status").charAt(0));
+                fillEntityFromResultSet(rst, vaga);
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
         } finally {
             ConnectionFactory.closeConnection(conexao, pstm, rst);
-            return servico;
+            return vaga;
         }
     }
 
     @Override
-    public List<Servico> Retrieve(String atributo, String valor) {
-        String sqlInstrucao = "SELECT id, descricao, valor, status FROM servico WHERE " + atributo + " LIKE ? AND status = 'A'";
+    public List<Vaga> Retrieve(String atributo, String valor) {
+        String colunaBusca = atributo;
+         if (atributo.equalsIgnoreCase("metragemVaga")) {
+             colunaBusca = "metragem_vaga";
+         }
+
+        String sqlInstrucao = "SELECT id, descricao, obs, metragem_vaga, status FROM vaga_estacionamento WHERE " + colunaBusca + " LIKE ? AND status = 'A'";
         Connection conexao = ConnectionFactory.getConnection();
         PreparedStatement pstm = null;
         ResultSet rst = null;
-        List<Servico> lista = new ArrayList<>();
+        List<Vaga> lista = new ArrayList<>();
 
         try {
             pstm = conexao.prepareStatement(sqlInstrucao);
@@ -99,12 +99,9 @@ public class ServicoDAO implements InterfaceDAO<Servico> {
             rst = pstm.executeQuery();
 
             while (rst.next()) {
-                Servico servico = new Servico();
-                servico.setId(rst.getInt("id"));
-                servico.setDescricao(rst.getString("descricao"));
-                servico.setValor(rst.getFloat("valor"));
-                servico.setStatus(rst.getString("status").charAt(0));
-                lista.add(servico);
+                Vaga vaga = new Vaga();
+                 fillEntityFromResultSet(rst, vaga);
+                lista.add(vaga);
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -115,28 +112,29 @@ public class ServicoDAO implements InterfaceDAO<Servico> {
     }
 
     @Override
-    public void Update(Servico objeto) {
-        String sqlInstrucao = "UPDATE servico SET descricao = ?, valor = ?, status = ? WHERE id = ?";
+    public void Update(Vaga objeto) {
+        String sqlInstrucao = "UPDATE vaga_estacionamento SET descricao = ?, obs = ?, metragem_vaga = ?, status = ? WHERE id = ?";
         Connection conexao = ConnectionFactory.getConnection();
         PreparedStatement pstm = null;
         boolean originalAutoCommitState = true;
 
         if (conexao == null) {
-             System.err.println("ERRO FATAL: Conexão NULA ao tentar atualizar Servico ID: " + objeto.getId());
+             System.err.println("ERRO FATAL: Conexão NULA ao tentar atualizar VagaEstacionamento ID: " + objeto.getId());
              return;
         }
 
         try {
-            originalAutoCommitState = conexao.getAutoCommit();
+             originalAutoCommitState = conexao.getAutoCommit();
              if(originalAutoCommitState){
                 conexao.setAutoCommit(false);
              }
 
             pstm = conexao.prepareStatement(sqlInstrucao);
             pstm.setString(1, objeto.getDescricao());
-            pstm.setFloat(2, objeto.getValor());
-            pstm.setString(3, String.valueOf(objeto.getStatus()));
-            pstm.setInt(4, objeto.getId());
+            pstm.setString(2, objeto.getObs());
+            pstm.setFloat(3, objeto.getMetragemVaga());
+            pstm.setString(4, String.valueOf(objeto.getStatus()));
+            pstm.setInt(5, objeto.getId());
             
             int rowsAffected = pstm.executeUpdate();
 
@@ -156,14 +154,14 @@ public class ServicoDAO implements InterfaceDAO<Servico> {
     }
 
     @Override
-    public void Delete(Servico objeto) {
-        String sqlInstrucao = "UPDATE servico SET status = 'I' WHERE id = ?";
+    public void Delete(Vaga objeto) {
+        String sqlInstrucao = "UPDATE vaga_estacionamento SET status = 'I' WHERE id = ?";
         Connection conexao = ConnectionFactory.getConnection();
         PreparedStatement pstm = null;
         boolean originalAutoCommitState = true; 
 
         if (conexao == null) {
-             System.err.println("ERRO FATAL: Conexão NULA ao tentar deletar Servico ID: " + objeto.getId());
+             System.err.println("ERRO FATAL: Conexão NULA ao tentar deletar VagaEstacionamento ID: " + objeto.getId());
             return; 
         }
 
@@ -202,8 +200,16 @@ public class ServicoDAO implements InterfaceDAO<Servico> {
                 }
             } catch (SQLException autoCommitEx) {
                 autoCommitEx.printStackTrace();
-            }   
+            }
             ConnectionFactory.closeConnection(conexao, pstm);
         }
+    }
+
+    private void fillEntityFromResultSet(ResultSet rst, Vaga vaga) throws SQLException {
+        vaga.setId(rst.getInt("id"));
+        vaga.setDescricao(rst.getString("descricao"));
+        vaga.setObs(rst.getString("obs"));
+        vaga.setMetragemVaga(rst.getFloat("metragem_vaga"));
+        vaga.setStatus(rst.getString("status").charAt(0));
     }
 }

@@ -5,13 +5,17 @@
  */
 package view;
 
+import controller.ControllerCadFornecedor;
 import controller.ControllerCadFuncionario;
 import controller.ControllerCadHospede;
 import controller.ControllerCadMarca;
 import controller.ControllerCadModelo;
 import controller.ControllerCadProdutoCopa;
+import controller.ControllerCadQuarto;
 import controller.ControllerCadServico;
+import controller.ControllerCadVaga;
 import controller.ControllerCadVeiculo;
+import javax.swing.UIManager;
 
 /**
  *
@@ -65,6 +69,11 @@ public class TelaMenuPrincipal extends javax.swing.JFrame {
 
         jMenuItem4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/Delivery.png"))); // NOI18N
         jMenuItem4.setText("Fornecedor");
+        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem4ActionPerformed(evt);
+            }
+        });
         jMenu2.add(jMenuItem4);
 
         jMenuItem5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/People.png"))); // NOI18N
@@ -232,11 +241,15 @@ public class TelaMenuPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem10ActionPerformed
 
     private void jMenuItem11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem11ActionPerformed
-        // TODO add your handling code here:
+        TelaCadastroQuarto telaCadastroQuarto = new TelaCadastroQuarto(null,true);
+        ControllerCadQuarto controllerCadQuarto = new ControllerCadQuarto(telaCadastroQuarto);
+        telaCadastroQuarto.setVisible(true);
     }//GEN-LAST:event_jMenuItem11ActionPerformed
 
     private void jMenuItem12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem12ActionPerformed
-        // TODO add your handling code here:
+         TelaCadastroVaga telaCadastroVaga = new TelaCadastroVaga(null,true);
+        ControllerCadVaga controllerCadVaga= new ControllerCadVaga(telaCadastroVaga);
+        telaCadastroVaga.setVisible(true);  
     }//GEN-LAST:event_jMenuItem12ActionPerformed
 
     private void jMenuItemProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemProdutoActionPerformed
@@ -244,6 +257,12 @@ public class TelaMenuPrincipal extends javax.swing.JFrame {
         ControllerCadProdutoCopa controllerCadProdutoCopa= new ControllerCadProdutoCopa(telaCadastroProduto);
         telaCadastroProduto.setVisible(true);   
     }//GEN-LAST:event_jMenuItemProdutoActionPerformed
+
+    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
+       TelaCadastroFornecedor telaCadastroFornecedor = new TelaCadastroFornecedor(null,true);
+        ControllerCadFornecedor controllerCadFornecedor= new ControllerCadFornecedor(telaCadastroFornecedor);
+        telaCadastroFornecedor.setVisible(true); 
+    }//GEN-LAST:event_jMenuItem4ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -271,7 +290,10 @@ public class TelaMenuPrincipal extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(TelaMenuPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-
+        UIManager.put("OptionPane.yesButtonText", "Sim");
+        UIManager.put("OptionPane.noButtonText", "Não");
+        UIManager.put("OptionPane.cancelButtonText", "Cancelar"); // Opcional, se usar Cancel
+        UIManager.put("OptionPane.okButtonText", "OK");
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {

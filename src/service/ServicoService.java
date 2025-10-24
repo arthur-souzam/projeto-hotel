@@ -10,13 +10,16 @@ public class ServicoService {
         ServicoDAO servicoDAO = new ServicoDAO();
         servicoDAO.Create(objeto);
     }
-
+    
+    public static List<Servico> Carregar() { // Adicionado Carregar sem parâmetros
+        ServicoDAO servicoDAO = new ServicoDAO();
+        return servicoDAO.Retrieve();
+    }
+     
     public static Servico Carregar(int id) {
         ServicoDAO servicoDAO = new ServicoDAO();
         return servicoDAO.Retrieve(id);
     }
-
-   
 
     public static List<Servico> Carregar(String atributo, String valor) {
         ServicoDAO servicoDAO = new ServicoDAO();

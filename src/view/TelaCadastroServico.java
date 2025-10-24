@@ -1,8 +1,12 @@
 package view;
 
 import javax.swing.JButton;
+import javax.swing.JFormattedTextField;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.text.NumberFormatter; 
+import java.text.DecimalFormat; 
+import java.text.NumberFormat; 
 
 public class TelaCadastroServico extends javax.swing.JDialog {
 
@@ -16,11 +20,13 @@ public class TelaCadastroServico extends javax.swing.JDialog {
     public JButton getjButtonGravar() { return jButtonGravar; }
     public JButton getjButtonNovo() { return jButtonNovo; }
     public JButton getjButtonSair() { return jButtonSair; }
+    public JButton getjButtonExcluir() { return jButtonExcluir; }
     public JPanel getjPanelBotoes() { return jPanelBotoes; }
     public JPanel getjPanelDados() { return jPanelDados; }
     public JTextField getjTextFieldId() { return jTextFieldId; }
     public JTextField getjTextFieldDescricao() { return jTextFieldDescricao; }
-    public JTextField getjTextFieldValor() { return jTextFieldValor; }
+    public JFormattedTextField getjFormattedTextFieldValor() { return jFormattedTextFieldValor; }
+    public JTextField getjTextFieldStatus() { return jTextFieldStatus; }
 
     @SuppressWarnings("unchecked")
     private void initComponents() {
@@ -32,6 +38,7 @@ public class TelaCadastroServico extends javax.swing.JDialog {
         jButtonCancelar = new javax.swing.JButton();
         jButtonGravar = new javax.swing.JButton();
         jButtonBuscar = new javax.swing.JButton();
+        jButtonExcluir = new javax.swing.JButton();
         jButtonSair = new javax.swing.JButton();
         jPanelDados = new javax.swing.JPanel();
         jLabelId = new javax.swing.JLabel();
@@ -39,7 +46,25 @@ public class TelaCadastroServico extends javax.swing.JDialog {
         jLabelDescricao = new javax.swing.JLabel();
         jTextFieldDescricao = new javax.swing.JTextField();
         jLabelValor = new javax.swing.JLabel();
-        jTextFieldValor = new javax.swing.JTextField();
+       
+        try {
+            DecimalFormat decimalFormat = new DecimalFormat("#,##0.00"); 
+            NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new java.util.Locale("pt", "BR")); 
+            decimalFormat.setMinimumFractionDigits(2);
+            decimalFormat.setMaximumFractionDigits(2);
+            NumberFormatter numberFormatter = new NumberFormatter(decimalFormat);
+            numberFormatter.setFormat(currencyFormat); 
+            numberFormatter.setAllowsInvalid(false); 
+            numberFormatter.setValueClass(Float.class); 
+            jFormattedTextFieldValor = new javax.swing.JFormattedTextField(numberFormatter);
+        } catch (Exception ex) {
+           
+            jFormattedTextFieldValor = new javax.swing.JFormattedTextField();
+             ex.printStackTrace();
+        }
+   
+        jLabelStatus = new javax.swing.JLabel();
+        jTextFieldStatus = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Cadastro de Serviço");
@@ -83,6 +108,12 @@ public class TelaCadastroServico extends javax.swing.JDialog {
         jButtonBuscar.setPreferredSize(new java.awt.Dimension(110, 35));
         jPanelBotoes.add(jButtonBuscar);
 
+        jButtonExcluir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/Delete.png")));
+        jButtonExcluir.setText("Excluir");
+        jButtonExcluir.setEnabled(false);
+        jButtonExcluir.setPreferredSize(new java.awt.Dimension(110, 35));
+        jPanelBotoes.add(jButtonExcluir);
+
         jButtonSair.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/Exit.png")));
         jButtonSair.setText("Sair");
         jButtonSair.setPreferredSize(new java.awt.Dimension(110, 35));
@@ -96,6 +127,8 @@ public class TelaCadastroServico extends javax.swing.JDialog {
         jTextFieldId.setEnabled(false);
         jLabelDescricao.setText("Descrição");
         jLabelValor.setText("Valor (R$)");
+        jLabelStatus.setText("Status");
+        jTextFieldStatus.setEnabled(false);
 
         javax.swing.GroupLayout jPanelDadosLayout = new javax.swing.GroupLayout(jPanelDados);
         jPanelDados.setLayout(jPanelDadosLayout);
@@ -109,14 +142,16 @@ public class TelaCadastroServico extends javax.swing.JDialog {
                 .addGap(18, 18, 18)
                 .addGroup(jPanelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabelDescricao)
-                    .addComponent(jTextFieldDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTextFieldDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextFieldValor, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)
-                    .addGroup(jPanelDadosLayout.createSequentialGroup()
-                        .addComponent(jLabelValor)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addGap(20, 20, 20))
+                    .addComponent(jLabelValor)
+                    .addComponent(jFormattedTextFieldValor, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabelStatus)
+                    .addComponent(jTextFieldStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(22, Short.MAX_VALUE))
         );
         jPanelDadosLayout.setVerticalGroup(
             jPanelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -125,12 +160,14 @@ public class TelaCadastroServico extends javax.swing.JDialog {
                 .addGroup(jPanelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabelId)
                     .addComponent(jLabelDescricao)
-                    .addComponent(jLabelValor))
+                    .addComponent(jLabelValor)
+                    .addComponent(jLabelStatus))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextFieldId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jTextFieldDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextFieldValor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jFormattedTextFieldValor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextFieldStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(22, Short.MAX_VALUE))
         );
 
@@ -155,11 +192,14 @@ public class TelaCadastroServico extends javax.swing.JDialog {
 
     private javax.swing.JButton jButtonBuscar;
     private javax.swing.JButton jButtonCancelar;
+    private javax.swing.JButton jButtonExcluir;
     private javax.swing.JButton jButtonGravar;
     private javax.swing.JButton jButtonNovo;
     private javax.swing.JButton jButtonSair;
+    private javax.swing.JFormattedTextField jFormattedTextFieldValor;
     private javax.swing.JLabel jLabelDescricao;
     private javax.swing.JLabel jLabelId;
+    private javax.swing.JLabel jLabelStatus;
     private javax.swing.JLabel jLabelTitulo;
     private javax.swing.JLabel jLabelValor;
     private javax.swing.JPanel jPanelBotoes;
@@ -167,5 +207,5 @@ public class TelaCadastroServico extends javax.swing.JDialog {
     private javax.swing.JPanel jPanelTitulo;
     private javax.swing.JTextField jTextFieldDescricao;
     private javax.swing.JTextField jTextFieldId;
-    private javax.swing.JTextField jTextFieldValor;
+    private javax.swing.JTextField jTextFieldStatus;
 }
