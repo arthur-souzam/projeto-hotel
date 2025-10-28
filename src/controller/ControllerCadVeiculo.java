@@ -53,22 +53,22 @@ public class ControllerCadVeiculo implements ActionListener {
             this.telaCadVeiculo.getjButtonGravar().setEnabled(true);
 
         } else if (e.getSource() == this.telaCadVeiculo.getjButtonGravar()) {
-            String placa = this.telaCadVeiculo.getjTextFieldPlaca().getText();
+            String placa = this.telaCadVeiculo.getjFormattedTextFieldPlaca().getText().toUpperCase().replace("-", ""); 
             String cor = this.telaCadVeiculo.getjTextFieldCor().getText();
             Modelo modeloSelecionado = (Modelo) this.telaCadVeiculo.getjComboBoxModelo().getSelectedItem();
 
-             if (placa.isBlank()) {
-                 JOptionPane.showMessageDialog(this.telaCadVeiculo, "A placa é obrigatória!", "Erro de Validação", JOptionPane.WARNING_MESSAGE);
-                 this.telaCadVeiculo.getjTextFieldPlaca().requestFocus();
+             if (placa.isBlank() || placa.length() != 7) { // Validação de tamanho básico
+                 JOptionPane.showMessageDialog(this.telaCadVeiculo, "A placa é obrigatória e deve conter 7 caracteres!");
+                 this.telaCadVeiculo.getjFormattedTextFieldPlaca().requestFocus(); // Alterado
                  return;
              }
               if (cor.isBlank()) {
-                 JOptionPane.showMessageDialog(this.telaCadVeiculo, "A cor é obrigatória!", "Erro de Validação", JOptionPane.WARNING_MESSAGE);
+                 JOptionPane.showMessageDialog(this.telaCadVeiculo, "A cor é obrigatória!");
                  this.telaCadVeiculo.getjTextFieldCor().requestFocus();
                  return;
              }
              if (modeloSelecionado == null) {
-                 JOptionPane.showMessageDialog(this.telaCadVeiculo, "Selecione um modelo!", "Erro de Validação", JOptionPane.WARNING_MESSAGE);
+                 JOptionPane.showMessageDialog(this.telaCadVeiculo, "Selecione um modelo!");
                  return;
              }
 
@@ -107,7 +107,7 @@ public class ControllerCadVeiculo implements ActionListener {
                 utilities.Utilities.limpaComponentes(this.telaCadVeiculo.getjPanelDados(), true);
 
                 this.telaCadVeiculo.getjTextFieldId().setText(String.valueOf(veiculo.getId()));
-                this.telaCadVeiculo.getjTextFieldPlaca().setText(veiculo.getPlaca());
+                this.telaCadVeiculo.getjFormattedTextFieldPlaca().setText(veiculo.getPlaca());
                 this.telaCadVeiculo.getjTextFieldCor().setText(veiculo.getCor());
                 this.telaCadVeiculo.getjTextFieldStatus().setText(String.valueOf(veiculo.getStatus()));
 
@@ -141,12 +141,12 @@ public class ControllerCadVeiculo implements ActionListener {
 
         } else if (e.getSource() == this.telaCadVeiculo.getjButtonExcluir()) {
             if (this.telaCadVeiculo.getjTextFieldId().getText().isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Você precisa buscar um veículo antes de excluir.", "Atenção", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Você precisa buscar um veículo antes de excluir.");
                 return;
             }
             
             if (this.telaCadVeiculo.getjTextFieldStatus().getText().equalsIgnoreCase("I")) {
-                 JOptionPane.showMessageDialog(null, "Este registro já está inativo.", "Atenção", JOptionPane.INFORMATION_MESSAGE);
+                 JOptionPane.showMessageDialog(null, "Este registro já está inativo.");
                  return;
             }
             
