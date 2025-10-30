@@ -77,17 +77,20 @@ public class ControllerCadMarca implements ActionListener {
             if (codigo != 0) {
                 Marca marca;
                 marca = MarcaService.Carregar(codigo);
-                
+
                 ativaDesativa(this.telaCadMarca, false);
                 utilities.Utilities.limpaComponentes(this.telaCadMarca.getjPanelDados(), true);
 
                 this.telaCadMarca.getjTextFieldId().setText(String.valueOf(marca.getId()));
                 this.telaCadMarca.getjTextFieldDescricao().setText(marca.getDescricao());
+                
+                
                 this.telaCadMarca.getjTextFieldStatus().setText(String.valueOf(marca.getStatus()));
-                
+
                 this.telaCadMarca.getjTextFieldId().setEnabled(false);
-                this.telaCadMarca.getjTextFieldStatus().setEnabled(false);
                 
+                this.telaCadMarca.getjTextFieldStatus().setEnabled(false); 
+
                 if (marca.getStatus() == 'A') {
                     this.telaCadMarca.getjButtonGravar().setEnabled(true);
                     this.telaCadMarca.getjButtonExcluir().setEnabled(true);
